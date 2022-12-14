@@ -26,10 +26,11 @@ bool Database::connect(const Settings& s)
         db.setUserName("");
         db.setPassword("");
         m_db = db;
+        LOGL("trying to connect to db");
 
         if (!m_db.open())
         {
-            LOGL();
+            ERR("failed to open connection to db");
         }
         return m_db.open();
     }
@@ -40,4 +41,39 @@ bool Database::connect(const Settings& s)
 bool Database::isOpen() const
 {
     return m_db.isOpen();
+}
+
+bool Database::userExists(const std::string& login) const
+{
+    //TODO
+    return false;
+}
+
+std::optional<UserData> Database::login(const std::string &login, const std::string &password)
+{
+    if (!isOpen())
+    {
+        ERR("database is closed");
+        return {};
+    }
+
+    UserData d;
+
+    if (!userExists(login))
+    {
+        ERR("user with login: " + login + " doesn't exist");
+    }
+
+    /*d = select * from users where login = login and password = hash(password)
+        if (d == null)
+        {
+            LOGL("user: " << login << " doesn't exist")
+            return {};
+        }
+        d.login = q.login
+        d.email = q.email
+        d.role = q.role
+    */
+
+    return d;
 }

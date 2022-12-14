@@ -10,12 +10,12 @@ public:
 
     struct Series
     {
-        Series(int s) // make int 32
+        Series(int s)
         {
 
         }
 
-        int a; // make int 32
+        int a;
     };
 
     struct Number

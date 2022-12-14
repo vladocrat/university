@@ -1,7 +1,9 @@
 #pragma once
 
 #include <QSqlDatabase>
+#include <optional>
 
+#include "userdata.h"
 #include "dbsettings.h"
 
 namespace DB {
@@ -12,10 +14,11 @@ public:
     Database();
     ~Database() noexcept;
 
-    bool connect(const Settings& s);
-    bool isOpen() const;
-    bool login(const std::string& login, const std::string& password);
-    bool registration(const std::string& login, const std::string& email, const std::string& password);
+    [[nodiscard]] bool connect(const Settings& s);
+    [[nodiscard]] bool isOpen() const;
+    [[nodiscard]] bool userExists(const std::string& login) const;
+    [[nodiscard]] std::optional<UserData> login(const std::string& login, const std::string& password);
+    [[nodiscard]] bool registration(const std::string& login, const std::string& email, const std::string& password);
 
 private:
    QSqlDatabase m_db;

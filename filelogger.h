@@ -4,13 +4,17 @@
 
 #include "logger.h"
 
-class FileLogger final : public Log::Logger
+namespace Log {
+
+class FileLogger final : public Logger
 {
 public:
     FileLogger();
+    ~FileLogger();
 
     void init(const std::string& fileName);
-    void log(const std::string &s);
+    void log(const std::string& s);
+    void err(const std::string& s);
     void reset() noexcept;
     void reset(const std::string& fileName) noexcept;
 
@@ -18,3 +22,5 @@ private:
     struct File;
     std::unique_ptr<File> impl;
 };
+
+} //Log

@@ -12,16 +12,19 @@ public:
     }
 
     void logMessage(const std::string& s);
+    void logError(const std::string& s);
 
 private:
     FileController();
-    ~FileController() noexcept;
+    ~FileController() noexcept {};
     FileController(const FileController&) = delete;
     FileController(FileController&&) = delete;
     FileController operator=(const FileController&) = delete;
 
-    FileLogger m_logger;
+    Log::FileLogger m_logger;
 };
 
-#define LOGL(x) FileController::instance()->logMessage(x)
+#define fileController FileController::instance()
+#define LOGL(x) fileController->logMessage(x)
+#define ERR(x) fileController->logError(x)
 

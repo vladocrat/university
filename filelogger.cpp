@@ -2,6 +2,8 @@
 
 #include <fstream>
 
+using namespace Log;
+
 struct FileLogger::File
 {
     File(const std::string& fileName)
@@ -18,6 +20,11 @@ struct FileLogger::File
 };
 
 FileLogger::FileLogger()
+{
+
+}
+
+FileLogger::~FileLogger()
 {
 
 }
@@ -47,4 +54,9 @@ void FileLogger::reset(const std::string &fileName) noexcept
 void FileLogger::log(const std::string &s)
 {
     impl->file << s;
+}
+
+void FileLogger::err(const std::string &s)
+{
+    impl->file << "ERR::" << s;
 }

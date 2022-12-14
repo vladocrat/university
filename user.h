@@ -1,25 +1,42 @@
 #pragma once
 
 #include <memory>
+#include <QObject>
+#include <QQmlEngine>
 
-class User
+#include "userdata.h"
+
+class User : public QObject
 {
+    Q_OBJECT
 public:
-    enum Role {
-        Admin,
-        MRO,
-        Accountant
-    };
+    static User* instance()
+    {
+        static User user;
+        return &user;
+    }
 
-    User();
-    ~User();
+    Q_PROPERTY(Role role READ role NOTIFY roleChanged)
 
-    Role role() const {return m_role;}
+    Role role() const   {return m_data.role;}
+    UserData* data()    {return &m_data;}
+
+    static void registerType()
+    {
+        qmlRegisterSingletonInstance<User>("User", 1, 0, "User", User::instance());
+    }
+
+signals:
+    void roleChanged();
 
 private:
-    Role m_role;
-    struct Credentials;
-    std::unique_ptr<Credentials> impl;
+    User() = default;
+    ~User() = default;
+    User(const User&) = delete;
+    User(User&&) = delete;
+    User operator=(const User&) = delete;
+
+    UserData m_data;
 };
 
-
+#define user User::instance()
