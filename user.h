@@ -3,6 +3,7 @@
 #include <memory>
 #include <QObject>
 #include <QQmlEngine>
+#include <QString>
 
 #include "userdata.h"
 
@@ -16,10 +17,11 @@ public:
         return &user;
     }
 
-    Q_PROPERTY(Role role READ role NOTIFY roleChanged)
+    Q_PROPERTY(QString role READ role NOTIFY roleChanged)
 
-    Role role() const   {return m_data.role;}
-    UserData* data()    {return &m_data;}
+    QString role()  const {return m_data.roleStr();}
+    QString login() const {return QString::fromStdString(m_data.login);}
+    UserData* data()      {return &m_data;}
 
     static void registerType()
     {

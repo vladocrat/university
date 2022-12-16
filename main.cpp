@@ -3,6 +3,14 @@
 
 #include "user.h"
 #include "logincontroller.h"
+#include "menucontroller.h"
+
+static void registerTypes()
+{
+    user->registerType();
+    loginController->registerType();
+    menuController->registerType();
+}
 
 int main(int argc, char *argv[])
 {
@@ -11,8 +19,7 @@ int main(int argc, char *argv[])
 #endif
     QGuiApplication app(argc, argv);
 
-    user->registerType();
-    loginController->registerType();
+    registerTypes();
 
     QQmlApplicationEngine engine;
 

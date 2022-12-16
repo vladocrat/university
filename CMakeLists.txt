@@ -29,6 +29,7 @@ set(PROJECT_SOURCES
         userdata.h
         filelogger.h filelogger.cpp
         logincontroller.h logincontroller.cpp
+        menucontroller.h menucontroller.cpp
         qml.qrc
 )
 

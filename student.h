@@ -17,5 +17,7 @@ private:
     std::string m_fullName;
     Group m_group;
     Passport m_passport;
+    //dormitory
+    //medical insurance
 };
 

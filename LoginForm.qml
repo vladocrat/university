@@ -5,13 +5,15 @@ import QtQuick.Window 2.15
 import LoginController 1.0
 
 Window {
+    id: root
+
     width: 400
     height: 480
     maximumHeight: 480
     maximumWidth: 400
     minimumHeight: 480
     minimumWidth: 400
-    visible: true
+    visible: false
     title: qsTr("Login")
 
     QtObject {
@@ -83,8 +85,6 @@ Window {
                     //TODO show popup
                     console.log("failed to login");
                 }
-
-                //TODO redirect to main window
             }
         }
     }
