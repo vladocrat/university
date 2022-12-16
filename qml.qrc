@@ -3,5 +3,7 @@
         <file>main.qml</file>
         <file>LoginForm.qml</file>
         <file>TopBar.qml</file>
+        <file>MenuButton.qml</file>
+        <file>ActionsMenu.qml</file>
     </qresource>
 </RCC>

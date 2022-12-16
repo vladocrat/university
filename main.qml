@@ -64,21 +64,14 @@ Window {
             anchors.fill: parent
             spacing: 0
 
-            Button {
+            MenuButton {
                 id: btn
 
                 Layout.alignment: Qt.AlignCenter
                 Layout.preferredHeight: 40
                 Layout.fillWidth: true
-
-                background: Rectangle {
-                    border.width: 1
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "student"
-                    }
-                }
+                pressColor: "red"
+                btnText: "student"
 
                 onClicked: {
                     if (studentMenu.visible === true) {
@@ -89,19 +82,12 @@ Window {
                 }
             }
 
-            Button {
+            MenuButton {
                 Layout.alignment: Qt.AlignCenter
                 Layout.preferredHeight: 40
                 Layout.fillWidth: true
-
-                background: Rectangle {
-                    border.width: 1
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "contract"
-                    }
-                }
+                pressColor: "red"
+                btnText: "contract"
 
                 onClicked: {
                     if (contractMenu.visible === true) {
@@ -112,19 +98,12 @@ Window {
                 }
             }
 
-            Button {
+            MenuButton {
                 Layout.alignment: Qt.AlignCenter
                 Layout.preferredHeight: 40
                 Layout.fillWidth: true
-
-                background: Rectangle {
-                    border.width: 1
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "gap year"
-                    }
-                }
+                pressColor: "red"
+                btnText: "gap year"
 
                 onClicked: {
                     if (gapYearMenu.visible === true) {
@@ -142,297 +121,30 @@ Window {
         }
     }
 
-    Rectangle {
+    ActionsMenu {
         id: studentMenu
 
         anchors.top: topbar.bottom
         anchors.left: mainMenu.right
         height: root.height
         width: root.width / 4
-        color: "blue"
-        border.width: 1
-        visible: false
-
-        ColumnLayout {
-            anchors.fill: parent
-            spacing: 0
-
-            Button {
-                Layout.alignment: Qt.AlignCenter
-                Layout.preferredHeight: 40
-                Layout.fillWidth: true
-
-                background: Rectangle {
-                    border.width: 1
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "get all"
-                    }
-                }
-
-                onClicked: {
-
-                }
-            }
-
-            Button {
-                Layout.alignment: Qt.AlignCenter
-                Layout.preferredHeight: 40
-                Layout.fillWidth: true
-
-                background: Rectangle {
-                    border.width: 1
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "insert"
-                    }
-                }
-
-                onClicked: {
-
-                }
-            }
-
-            Button {
-                Layout.alignment: Qt.AlignCenter
-                Layout.preferredHeight: 40
-                Layout.fillWidth: true
-
-                background: Rectangle {
-                    border.width: 1
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "update"
-                    }
-                }
-
-                onClicked: {
-
-                }
-            }
-
-            Button {
-                Layout.alignment: Qt.AlignCenter
-                Layout.preferredHeight: 40
-                Layout.fillWidth: true
-
-                background: Rectangle {
-                    border.width: 1
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "delete"
-                    }
-                }
-
-                onClicked: {
-
-                }
-            }
-
-            Item {
-                Layout.preferredHeight: parent.height - btn.height
-                Layout.preferredWidth: 1
-            }
-        }
     }
 
-    Rectangle {
+    ActionsMenu {
         id: contractMenu
 
         anchors.top: topbar.bottom
         anchors.left: mainMenu.right
         height: root.height
         width: root.width / 4
-        color: "blue"
-        border.width: 1
-        visible: false
-
-        ColumnLayout {
-            anchors.fill: parent
-            spacing: 0
-
-            Button {
-                Layout.alignment: Qt.AlignCenter
-                Layout.preferredHeight: 40
-                Layout.fillWidth: true
-
-                background: Rectangle {
-                    border.width: 1
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "get all"
-                    }
-                }
-
-                onClicked: {
-
-                }
-            }
-
-            Button {
-                Layout.alignment: Qt.AlignCenter
-                Layout.preferredHeight: 40
-                Layout.fillWidth: true
-
-                background: Rectangle {
-                    border.width: 1
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "insert"
-                    }
-                }
-
-                onClicked: {
-
-                }
-            }
-
-            Button {
-                Layout.alignment: Qt.AlignCenter
-                Layout.preferredHeight: 40
-                Layout.fillWidth: true
-
-                background: Rectangle {
-                    border.width: 1
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "update"
-                    }
-                }
-
-                onClicked: {
-
-                }
-            }
-
-            Button {
-                Layout.alignment: Qt.AlignCenter
-                Layout.preferredHeight: 40
-                Layout.fillWidth: true
-
-                background: Rectangle {
-                    border.width: 1
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "delete"
-                    }
-                }
-
-                onClicked: {
-
-                }
-            }
-
-            Item {
-                Layout.preferredHeight: parent.height - btn.height
-                Layout.preferredWidth: 1
-            }
-        }
     }
 
-    Rectangle {
+    ActionsMenu {
         id: gapYearMenu
 
         anchors.top: topbar.bottom
         anchors.left: mainMenu.right
         height: root.height
         width: root.width / 4
-        color: "blue"
-        border.width: 1
-        visible: false
-
-        ColumnLayout {
-            anchors.fill: parent
-            spacing: 0
-
-            Button {
-                Layout.alignment: Qt.AlignCenter
-                Layout.preferredHeight: 40
-                Layout.fillWidth: true
-
-                background: Rectangle {
-                    border.width: 1
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "get all"
-                    }
-                }
-
-                onClicked: {
-
-                }
-            }
-
-            Button {
-                Layout.alignment: Qt.AlignCenter
-                Layout.preferredHeight: 40
-                Layout.fillWidth: true
-
-                background: Rectangle {
-                    border.width: 1
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "insert"
-                    }
-                }
-
-                onClicked: {
-
-                }
-            }
-
-            Button {
-                Layout.alignment: Qt.AlignCenter
-                Layout.preferredHeight: 40
-                Layout.fillWidth: true
-
-                background: Rectangle {
-                    border.width: 1
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "update"
-                    }
-                }
-
-                onClicked: {
-
-                }
-            }
-
-            Button {
-                Layout.alignment: Qt.AlignCenter
-                Layout.preferredHeight: 40
-                Layout.fillWidth: true
-
-                background: Rectangle {
-                    border.width: 1
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "delete"
-                    }
-                }
-
-                onClicked: {
-
-                }
-            }
-
-            Item {
-                Layout.preferredHeight: parent.height - btn.height
-                Layout.preferredWidth: 1
-            }
-        }
     }
 }
