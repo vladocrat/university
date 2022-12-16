@@ -1,11 +1,21 @@
 #pragma once
 
+#include <QString>
+
 namespace DB {
 
-class Settings
+struct Settings
 {
-public:
-    Settings();
+    Settings()
+    {
+
+    }
+
+    QString username;
+    QString dbName;
+    QString hostName;
+    QString password;
+    int port;
 };
 
 } // DB

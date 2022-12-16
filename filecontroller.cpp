@@ -2,15 +2,25 @@
 
 FileController::FileController()
 {
-    m_logger.init("log.txt");
 }
 
-void FileController::logMessage(const std::string &s)
+
+void FileController::logMessage(const QString &s)
 {
-    m_logger.log(s);
+    m_logger.log(s.toStdString());
 }
 
-void FileController::logError(const std::string &s)
+void FileController::logError(const QString &s)
 {
-    m_logger.err(s);
+    m_logger.err(s.toStdString());
+}
+
+void FileController::logError(const QSqlError &s)
+{
+    logError(s.text());
+}
+
+void FileController::init(const std::string& path)
+{
+    m_logger.init(path);
 }

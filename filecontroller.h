@@ -1,5 +1,8 @@
 #pragma once
 
+#include <QString>
+#include <QSqlError>
+
 #include "filelogger.h"
 
 class FileController
@@ -11,8 +14,10 @@ public:
         return &fc;
     }
 
-    void logMessage(const std::string& s);
-    void logError(const std::string& s);
+    void logMessage(const QString& s);
+    void logError(const QString& s);
+    void logError(const QSqlError& s);
+    void init(const std::string& path);
 
 private:
     FileController();

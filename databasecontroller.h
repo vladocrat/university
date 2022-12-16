@@ -13,8 +13,9 @@ public:
         return &dc;
     }
 
-    bool connect(const DB::Settings& s);
+    [[nodiscard]] bool connect(const DB::Settings& s);
     [[nodiscard]] bool login(const std::string& login, const std::string& password);
+    [[nodiscard]] QList<UserData> getAllUsers();
 
 private:
     DatabaseController() = default;

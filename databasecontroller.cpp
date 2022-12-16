@@ -13,7 +13,7 @@ bool DatabaseController::login(const std::string& login, const std::string& pass
 
     if (ret.has_value())
     {
-        auto data = user->data();
+        auto data = User::instance()->data();
         data->email = ret->email;
         data->login = ret->login;
         data->role = ret->role;
@@ -22,4 +22,9 @@ bool DatabaseController::login(const std::string& login, const std::string& pass
     }
 
     return false;
+}
+
+QList<UserData> DatabaseController::getAllUsers()
+{
+    return m_db.getAllUsers();
 }

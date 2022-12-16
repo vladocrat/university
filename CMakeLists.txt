@@ -10,15 +10,19 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(LOG_PATH ${CMAKE_CURRENT_SOURCE_DIR}/log.txt)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Quick REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick REQUIRED)
 find_package(Qt5Sql REQUIRED)
 
+message(${CMAKE_CURRENT_SOURCE_DIR})
+message(${LOG_PATH})
+
 set(PROJECT_SOURCES
         main.cpp
         database.h database.cpp
-        dbsettings.h dbsettings.cpp
+        dbsettings.h
         user.h user.cpp
         student.h student.cpp
         group.h group.cpp
@@ -30,6 +34,9 @@ set(PROJECT_SOURCES
         filelogger.h filelogger.cpp
         logincontroller.h logincontroller.cpp
         menucontroller.h menucontroller.cpp
+        usercontroller.h usercontroller.cpp
+        DB_config.h
+        usersmodel.h usersmodel.cpp
         qml.qrc
 )
 

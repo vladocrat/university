@@ -41,4 +41,4 @@ private:
     UserData m_data;
 };
 
-#define user User::instance()
+//#define user User::instance()
