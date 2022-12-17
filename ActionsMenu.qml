@@ -21,7 +21,7 @@ Rectangle {
             Layout.alignment: Qt.AlignCenter
             Layout.preferredHeight: 40
             Layout.fillWidth: true
-            pressColor: "red"
+            pressColor: "white"
             btnText: "get all"
 
             onClicked: {
@@ -33,7 +33,7 @@ Rectangle {
             Layout.alignment: Qt.AlignCenter
             Layout.preferredHeight: 40
             Layout.fillWidth: true
-            pressColor: "red"
+            pressColor: "white"
             btnText: "insert"
 
             onClicked: {
@@ -45,7 +45,7 @@ Rectangle {
             Layout.alignment: Qt.AlignCenter
             Layout.preferredHeight: 40
             Layout.fillWidth: true
-            pressColor: "red"
+            pressColor: "white"
             btnText: "update"
 
             onClicked: {
@@ -57,7 +57,7 @@ Rectangle {
             Layout.alignment: Qt.AlignCenter
             Layout.preferredHeight: 40
             Layout.fillWidth: true
-            pressColor: "red"
+            pressColor: "white"
             btnText: "delete"
 
             onClicked: {

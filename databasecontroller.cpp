@@ -28,3 +28,8 @@ QList<UserData> DatabaseController::getAllUsers()
 {
     return m_db.getAllUsers();
 }
+
+bool DatabaseController::insert(const UserData &d, const QString &password)
+{
+    return m_db.insert(d, password);
+}

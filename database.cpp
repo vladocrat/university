@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QSqlQuery>
 #include <QSqlRecord>
+#include <QCryptographicHash>
 
 #include "filecontroller.h"
 
@@ -96,35 +97,73 @@ QList<UserData> Database::getAllUsers()
 
     QSqlQuery query;
 
-    if (!query.prepare("SELECT * FROM users"))
+    if (!query.prepare("SELECT * FROM users join access_rights as ar \
+                       on users.access_rights_id = ar.access_rights_id"))
     {
         ERR(m_db.lastError());
     }
-
-    auto loginIx = query.record().indexOf("user_login");
-    auto emailIx = query.record().indexOf("user_email");
-    //TODO add roles
 
     if (!executeQuery(query))
     {
         return ret;
     }
 
+    auto loginIx = query.record().indexOf("user_login");
+    auto emailIx = query.record().indexOf("user_email");
+    auto roleIx = query.record().indexOf("access_rights_type");
+
     QString login;
     QString email;
+    QString role;
 
     while (query.next())
     {
         login = query.value(loginIx).toString();
         email = query.value(emailIx).toString();
+        role = query.value(roleIx).toString();
 
         UserData d;
         d.login = login.toStdString();
         d.email = email.toStdString();
+        d.role = stringToRole(role);
         ret.append(d);
     }
 
+    LOGL("users fetched successfully");
+
     return ret;
+}
+
+bool Database::insert(const UserData& ud, const QString& password)
+{
+    if (!isOpen())
+    {
+        ERR("db connection isnt open");
+        return false;
+    }
+
+    QSqlQuery query;
+
+    auto passwordHash = QCryptographicHash::hash(password.toUtf8(),
+                                                 QCryptographicHash::Algorithm::Sha256);
+
+    if (!query.prepare("insert into users (access_rights_id, user_password_hash, \
+                      user_login, user_email)"))
+    {
+
+        query.bindValue(0, roleToInt(ud.role));
+        query.bindValue(1, passwordHash);
+        query.bindValue(2, QString::fromStdString(ud.login));
+        query.bindValue(3, QString::fromStdString(ud.email));
+    }
+
+    if (!executeQuery(query))
+    {
+        ERR("failed to insert user: " + ud.toString());
+        return false;
+    }
+
+    return true;
 }
 
 bool Database::executeQuery(QSqlQuery& query)

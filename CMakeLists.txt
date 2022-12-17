@@ -16,9 +16,6 @@ find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Quick REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick REQUIRED)
 find_package(Qt5Sql REQUIRED)
 
-message(${CMAKE_CURRENT_SOURCE_DIR})
-message(${LOG_PATH})
-
 set(PROJECT_SOURCES
         main.cpp
         database.h database.cpp
@@ -34,9 +31,10 @@ set(PROJECT_SOURCES
         filelogger.h filelogger.cpp
         logincontroller.h logincontroller.cpp
         menucontroller.h menucontroller.cpp
-        usercontroller.h usercontroller.cpp
+        userrepository.h userrepository.cpp
         DB_config.h
         usersmodel.h usersmodel.cpp
+        baserepository.h
         qml.qrc
 )
 

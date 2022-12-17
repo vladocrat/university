@@ -12,18 +12,18 @@ class UsersModel : public QAbstractListModel
 public:
     UsersModel();
 
-    enum RoomRoles {
-        NameRole = Qt::UserRole + 1,
-        StatusRole,
-        PlayerCountRole,
-        AccessStringRole,
-        InitialBetRole,
-        MaxPlayerCountRole,
+    enum UserDataRoles {
+        RoleRole,
+        LoginRole,
+        EmailRole
     };
-    Q_ENUM(RoomRoles);
+    Q_ENUM(UserDataRoles);
 
+    void addUser(const UserData&);
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+
+    QList<UserData> list() const {return m_users;}
 
     static void registerType()
     {
@@ -38,7 +38,7 @@ protected:
     QHash<int, QByteArray> roleNames() const override;
 
 private:
-    QList<UserData> m_rooms;
+    QList<UserData> m_users;
 };
 
 

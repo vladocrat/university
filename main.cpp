@@ -1,5 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 
 #include "user.h"
 #include "DB_config.h"
@@ -9,8 +10,12 @@
 #include "menucontroller.h"
 #include "databasecontroller.h"
 #include "filecontroller.h"
-#include "usercontroller.h"
 
+///! repositories
+#include "userrepository.h"
+
+///! models
+#include "usersmodel.h"
 
 #include <iostream>
 
@@ -20,8 +25,10 @@ static void registerTypes()
 
     ///! controllers
     loginController->registerType();
-    userController->registerType();
     menuController->registerType();
+
+    ///! repositories
+    userRepository->registerType();
 }
 
 static void initDB()
@@ -58,6 +65,9 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     initDB();
+
+    engine.addImportPath("qrc:/");
+    engine.rootContext()->setContextProperty("usersModel", userRepository->model());
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
 

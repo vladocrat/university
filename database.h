@@ -20,7 +20,11 @@ public:
     [[nodiscard]] bool userExists(const std::string& login) const;
     [[nodiscard]] std::optional<UserData> login(const std::string& login, const std::string& password);
     [[nodiscard]] bool registration(const std::string& login, const std::string& email, const std::string& password);
+
+
+    ///! users
     [[nodiscard]] QList<UserData> getAllUsers();
+    [[nodiscard]] bool insert(const UserData&, const QString& password);
 
 private:
    [[nodiscard]] bool executeQuery(QSqlQuery& query);

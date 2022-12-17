@@ -3,6 +3,7 @@ import QtQuick.Window 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.12
 import User 1.0
+import UserRepository 1.0
 
 Window {
     id: root
@@ -56,7 +57,7 @@ Window {
 
         anchors.top: topbar.bottom
         height: root.height
-        width: root.width / 4
+        width: root.width / 5
         color: "red"
         border.width: 1
 
@@ -114,6 +115,22 @@ Window {
                 }
             }
 
+            MenuButton {
+                Layout.alignment: Qt.AlignCenter
+                Layout.preferredHeight: 40
+                Layout.fillWidth: true
+                pressColor: "red"
+                btnText: "users"
+
+                onClicked: {
+                    if (userMenu.visible === true) {
+                        userMenu.visible = false;
+                    } else {
+                        userMenu.visible = true;
+                    }
+                }
+            }
+
             Item {
                 Layout.preferredHeight: parent.height - btn.height
                 Layout.preferredWidth: 1
@@ -127,7 +144,7 @@ Window {
         anchors.top: topbar.bottom
         anchors.left: mainMenu.right
         height: root.height
-        width: root.width / 4
+        width: root.width / 5
     }
 
     ActionsMenu {
@@ -136,7 +153,7 @@ Window {
         anchors.top: topbar.bottom
         anchors.left: mainMenu.right
         height: root.height
-        width: root.width / 4
+        width: root.width / 5
     }
 
     ActionsMenu {
@@ -145,6 +162,79 @@ Window {
         anchors.top: topbar.bottom
         anchors.left: mainMenu.right
         height: root.height
-        width: root.width / 4
+        width: root.width / 5
+    }
+
+    ActionsMenu {
+        id: userMenu
+
+        anchors.top: topbar.bottom
+        anchors.left: mainMenu.right
+        height: root.height
+        width: root.width / 5
+
+        onGetAllClicked: {
+            UserRepository.getAll();
+            resultList.model = usersModel;
+            resultList.visible = true;
+        }
+
+        onInsertClicked: {
+            insertPopup.open();
+
+            if (!UserRepository.insert()) {
+                console.log("failed to insert");
+            }
+        }
+    }
+
+    ListView {
+        id: resultList
+        anchors.left: studentMenu.right
+        anchors.top: topbar.bottom
+        width: root.width - mainMenu.width - studentMenu.width
+        height: root.height
+        visible: false
+        clip: true
+
+        delegate: Rectangle {
+            height: 50
+            width: parent.width
+            border.width: 1
+
+            ColumnLayout {
+                anchors.fill: parent
+                spacing: 2
+
+                EntityCell {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    text: "Role: " + model.role
+                }
+
+                EntityCell {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    text: "Login: " + model.login
+                }
+
+                EntityCell {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    text: "Email: " + model.email
+                }
+            }
+        }
+    }
+
+    Popup {
+        id: insertPopup
+
+        x: Math.round((parent.width - width) / 2)
+        y: Math.round((parent.height - height) / 2)
+        width: root.width / 2
+        height: root.height / 2
+
     }
 }
+

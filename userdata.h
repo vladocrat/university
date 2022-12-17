@@ -4,9 +4,9 @@
 #include <unordered_map>
 #include <QString>
 
-enum class Role : uint8_t
+enum class Role : int
 {
-    Admin = 0,
+    Admin,
     MRO,
     Accountant
 };
@@ -21,21 +21,76 @@ struct RoleHash
 
 const std::unordered_map<const Role, QString, RoleHash> mapRoleToString
 {
-    {Role::Admin, QString("Admin")},
-    {Role::MRO, QString("MRO")},
-    {Role::Accountant, QString("Accountant")}
+    {Role::Admin, QString("admin")},
+    {Role::MRO, QString("mro")},
+    {Role::Accountant, QString("accountant")}
 };
 
-static QString roleToString(Role r)
+const std::unordered_map<const QString, Role, std::hash<QString>> mapStringToRole
+{
+    {QString("admin"), Role::Admin},
+    {QString("mro"), Role::MRO},
+    {QString("accountant"), Role::Accountant}
+};
+
+const std::unordered_map<const Role, int, RoleHash> mapRoleToInt
+{
+    {Role::Admin, 1},
+    {Role::MRO, 2},
+    {Role::Accountant, 3}
+};
+
+
+inline static int roleToInt(const Role& r)
+{
+    return mapRoleToInt.find(r)->second;
+}
+
+inline static QString roleToString(const Role& r)
 {
     return mapRoleToString.find(r)->second;
 }
 
+inline static Role stringToRole(const QString& s)
+{
+    return mapStringToRole.find(s)->second;
+}
+
 struct UserData
 {
+    QString toString() const
+    {
+        return QString("role: ")
+                .append(roleStr())
+                .append(" login: ")
+                .append(QString::fromStdString(login))
+                .append(" email: ")
+                .append(QString::fromStdString(email));
+    }
+
     QString roleStr() const
     {
         return roleToString(role);
+    }
+
+    bool operator==(const UserData& other) const
+    {
+        if (this->role != other.role)
+        {
+            return false;
+        }
+
+        if (this->login != other.login)
+        {
+            return false;
+        }
+
+        if (this->email != other.email)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     Role role = Role::Admin;
