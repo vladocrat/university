@@ -18,7 +18,7 @@ public:
     }
 
     Q_INVOKABLE void getAll();
-    Q_INVOKABLE bool insert(const UserData&, const QString& password);
+    Q_INVOKABLE bool insert(const QString& login, const QString& email, const QString& role, const QString& password);
     Q_INVOKABLE bool deleteOne(const UserRepository &);
     Q_INVOKABLE bool update(const UserRepository &);
 

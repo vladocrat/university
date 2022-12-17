@@ -15,8 +15,13 @@ void UserRepository::getAll()
     }
 }
 
-bool UserRepository::insert(const UserData& ud, const QString& password)
+bool UserRepository::insert(const QString& login, const QString& email, const QString& role, const QString& password)
 {
+    UserData ud;
+    ud.login = login.toStdString();
+    ud.email = email.toStdString();
+    ud.role = intToRole(role.toInt());
+
     return dbController->insert(ud, password);
 }
 

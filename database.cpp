@@ -148,14 +148,17 @@ bool Database::insert(const UserData& ud, const QString& password)
                                                  QCryptographicHash::Algorithm::Sha256);
 
     if (!query.prepare("insert into users (access_rights_id, user_password_hash, \
-                      user_login, user_email)"))
+                      user_login, user_email) values (?,?,?,?)"))
     {
-
-        query.bindValue(0, roleToInt(ud.role));
-        query.bindValue(1, passwordHash);
-        query.bindValue(2, QString::fromStdString(ud.login));
-        query.bindValue(3, QString::fromStdString(ud.email));
+        ERR(m_db.lastError());
+        qDebug() << m_db.lastError();
+        return false;
     }
+
+    query.bindValue(0, roleToInt(ud.role));
+    query.bindValue(1, passwordHash);
+    query.bindValue(2, QString::fromStdString(ud.login));
+    query.bindValue(3, QString::fromStdString(ud.email));
 
     if (!executeQuery(query))
     {

@@ -40,6 +40,17 @@ const std::unordered_map<const Role, int, RoleHash> mapRoleToInt
     {Role::Accountant, 3}
 };
 
+const std::unordered_map<const int, Role, std::hash<int>> mapIntToRole
+{
+    {1, Role::Admin},
+    {2, Role::MRO},
+    {3, Role::Accountant}
+};
+
+inline static Role intToRole(int n)
+{
+    return mapIntToRole.find(n)->second;
+}
 
 inline static int roleToInt(const Role& r)
 {

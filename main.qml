@@ -181,10 +181,6 @@ Window {
 
         onInsertClicked: {
             insertPopup.open();
-
-            if (!UserRepository.insert()) {
-                console.log("failed to insert");
-            }
         }
     }
 
@@ -233,8 +229,93 @@ Window {
         x: Math.round((parent.width - width) / 2)
         y: Math.round((parent.height - height) / 2)
         width: root.width / 2
-        height: root.height / 2
+        height: root.height / 1.3
+        focus: true
+        modal: true
+        closePolicy: Popup.CloseOnEscape;
 
+        contentItem: ColumnLayout {
+            anchors.fill: parent
+
+            ComboBox {
+                id: formChoice
+
+                Layout.alignment: Qt.AlignCenter
+                model: ["", "student", "contract", "gap year", "user"]
+            }
+
+            ColumnLayout {
+                id: studentInsert
+
+                visible: formChoice.currentIndex === 1
+            }
+
+            ColumnLayout {
+                id: contractInsert
+
+                visible: formChoice.currentIndex === 2
+            }
+
+            ColumnLayout {
+                id: gapyearInsert
+
+                visible: formChoice.currentIndex === 3
+            }
+
+            ColumnLayout {
+                id: userInsert
+
+                Layout.alignment: Qt.AlignCenter
+                visible: formChoice.currentIndex === 4
+
+                Text {
+                    Layout.alignment: Qt.AlignCenter
+                    text: "INSERT USER"
+                }
+
+                TextField {
+                    id: userLogin
+
+                    Layout.alignment: Qt.AlignCenter
+                    placeholderText: "login"
+                }
+
+                TextField {
+                    id: userEmail
+
+                    Layout.alignment: Qt.AlignCenter
+                    placeholderText: "email"
+                }
+
+                TextField {
+                    id: userPassword
+
+                    Layout.alignment: Qt.AlignCenter
+                    placeholderText: "password"
+                }
+
+                ComboBox {
+                    id: userRole
+
+                    Layout.alignment: Qt.AlignCenter
+                    model: ["", "admin", "mro", "accountant"]
+                }
+
+                MenuButton {
+                    Layout.alignment: Qt.AlignCenter
+                    onClicked: {
+                        if (!UserRepository.insert(userLogin.text,
+                                                   userEmail.text,
+                                                   userRole.currentIndex,
+                                                   userPassword.text)) {
+                            console.log("failed to insert");
+                        }
+
+                        insertPopup.close();
+                    }
+                }
+            }
+        }
     }
 }
 
