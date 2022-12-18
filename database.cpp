@@ -166,6 +166,8 @@ bool Database::insert(const UserData& ud, const QString& password)
         return false;
     }
 
+    LOGL("user added successfully");
+
     return true;
 }
 
@@ -196,7 +198,49 @@ bool Database::deleteOne(const UserData &d)
         return false;
     }
 
-    LOGL("user deleted successfully");
+    LOGL("user: " + d.toString() +"  deleted successfully");
+
+    return true;
+}
+
+bool Database::update(const UserData& newData, const UserData& userToUpdate, const QString& password)
+{
+    if (!isOpen())
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    QSqlQuery query;
+    auto passwordHash = QCryptographicHash::hash(password.toUtf8(),
+                        QCryptographicHash::Algorithm::Sha256);
+
+
+    if (!query.prepare("update users \
+                       set access_rights_id=:role, user_login=:login,\
+                       user_email=:email, user_password_hash=:password \
+                       where access_rights_id=:prevRole and user_login=:prevLogin \
+                       and user_email=:email"))
+    {
+        ERR("failed to update user: " + userToUpdate.toString());
+        return false;
+    }
+
+    query.bindValue(":role", QString::number(newData.roleInt()), QSql::In);
+    query.bindValue(":login", QString::fromStdString(newData.login), QSql::In);
+    query.bindValue(":email", QString::fromStdString(newData.email), QSql::In);
+    query.bindValue(":password", passwordHash, QSql::In);
+    query.bindValue(":prevRole", QString::number(userToUpdate.roleInt()), QSql::In);
+    query.bindValue(":prevLogin", QString::fromStdString(userToUpdate.login), QSql::In);
+    query.bindValue(":prevEmail", QString::fromStdString(userToUpdate.email), QSql::In);
+
+    if (!executeQuery(query))
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    LOGL("updated user:" + userToUpdate.toString() + " successfully");
 
     return true;
 }

@@ -20,7 +20,7 @@ public:
     Q_INVOKABLE void getAll();
     Q_INVOKABLE bool insert(const QString& login, const QString& email, const QString& role, const QString& password);
     Q_INVOKABLE bool deleteOne(int);
-    Q_INVOKABLE bool update(const UserRepository &);
+    Q_INVOKABLE bool update(const QString& login, const QString& email, const QString& role, const QString& password, int userIx);
     Q_INVOKABLE int userCount();
 
     UsersModel* model() {return &m_model;}

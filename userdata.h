@@ -84,6 +84,11 @@ struct UserData
         return roleToString(role);
     }
 
+    int roleInt() const
+    {
+        return roleToInt(role);
+    }
+
     bool operator==(const UserData& other) const
     {
         if (this->role != other.role)

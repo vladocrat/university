@@ -5,6 +5,7 @@
 void UserRepository::getAll()
 {
     auto users = dbController->getAllUsers();
+    m_model.list().clear();
 
     for (const auto& x: users)
     {
@@ -27,12 +28,18 @@ bool UserRepository::insert(const QString& login, const QString& email, const QS
 
 bool UserRepository::deleteOne(int i)
 {
-    return dbController->deleteOne(m_model.list()[i]);
+    return dbController->deleteOne(m_model.list().at(i));
 }
 
-bool UserRepository::update(const UserRepository &)
+bool UserRepository::update(const QString& login, const QString& email, const QString& role, const QString& password, int userIx)
 {
-    return {};
+    UserData ud;
+    ud.login = login.toStdString();
+    ud.email = email.toStdString();
+    ud.role = intToRole(role.toInt());
+    auto userToUpdate = m_model.list().at(userIx);
+
+    return dbController->update(ud, userToUpdate, password);
 }
 
 int UserRepository::userCount()

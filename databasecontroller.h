@@ -20,6 +20,7 @@ public:
     [[nodiscard]] QList<UserData> getAllUsers();
     [[nodiscard]] bool insert(const UserData& d, const QString& password);
     [[nodiscard]] bool deleteOne(const UserData& d);
+    [[nodiscard]] bool update(const UserData& newData, const UserData& userToUpdate, const QString& password);
 
 private:
     DatabaseController() = default;

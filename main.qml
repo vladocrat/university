@@ -24,7 +24,7 @@ Window {
     }
 
     Component.onCompleted: {
-        deletePopup.open();
+        //deletePopup.open();
     }
 
     Rectangle {
@@ -185,6 +185,10 @@ Window {
         onDeleteClicked: {
             deletePopup.open();
         }
+
+        onUpdateClicked: {
+            updatePopup.open();
+        }
     }
 
     ListView {
@@ -307,14 +311,11 @@ Window {
                 MenuButton {
                     Layout.alignment: Qt.AlignCenter
                     onClicked: {
-                        if (!UserRepository.insert(userLogin.text,
-                                                   userEmail.text,
-                                                   userRole.currentIndex,
-                                                   userPassword.text)) {
-                            console.log("failed to insert");
+                        if (UserRepository.insert(userLogin.text,
+                                                  userEmail.text,
+                                                  userRole.currentIndex,
+                                                  userPassword.text)) {
                         }
-
-                        insertPopup.close();
                     }
                 }
             }
@@ -383,7 +384,9 @@ Window {
 
                             onClicked: {
                                 console.log(index);
-                                UserRepository.deleteOne(index)
+                                if (UserRepository.deleteOne(index)) {
+                                    UserRepository.getAll();
+                                }
                             }
                         }
 
@@ -409,6 +412,154 @@ Window {
                                 text: "Email: " + model.email
                             }
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    Popup {
+        id: updatePopup
+
+        x: Math.round((parent.width - width) / 2)
+        y: Math.round((parent.height - height) / 2)
+        width: root.width / 2
+        height: root.height / 1.3
+        focus: true
+        modal: true
+        closePolicy: Popup.CloseOnEscape;
+
+        contentItem: ColumnLayout {
+            anchors.fill: parent
+
+            Text {
+                Layout.alignment: Qt.AlignCenter
+                text: "Update"
+                font.pointSize: 12
+            }
+
+            ComboBox {
+                id: updateFormChoice
+
+                Layout.alignment: Qt.AlignCenter
+                model: ["", "student", "contract", "gap year", "user"]
+
+                onCurrentIndexChanged: {
+                    if (updateFormChoice.currentIndex === 4) {
+                        updateGetAllUsers.visible = true;
+                    }
+                }
+            }
+
+            ColumnLayout {
+                Layout.preferredHeight: parent.height - updateFormChoice.height - 30
+                Layout.preferredWidth: parent.width  - 30
+                Layout.alignment: Qt.AlignCenter
+
+
+                ListView {
+                    id: updateGetAllUsers
+
+                    Layout.preferredHeight: parent.height
+                    Layout.preferredWidth: parent.width
+                    visible: false
+                    clip: true
+
+                    onVisibleChanged: {
+                        UserRepository.getAll();
+                        updateGetAllUsers.model = usersModel
+                    }
+
+                    delegate: Rectangle {
+                        height: 50
+                        width: parent.width
+                        border.width: 1
+
+                        MouseArea {
+                            anchors.fill: parent
+
+                            onClicked: {
+                                updatePopup.close();
+                                userUpdateForm.userIx = index;
+                                userUpdateForm.open();
+                            }
+                        }
+
+                        ColumnLayout {
+                            anchors.fill: parent
+                            spacing: 2
+
+                            EntityCell {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+                                text: "Role: " + model.role
+                            }
+
+                            EntityCell {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+                                text: "Login: " + model.login
+                            }
+
+                            EntityCell {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+                                text: "Email: " + model.email
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    Popup {
+        id: userUpdateForm
+
+        property int userIx: -1
+
+        x: Math.round((parent.width - width) / 2)
+        y: Math.round((parent.height - height) / 2)
+        width: root.width / 2
+        height: root.height / 1.3
+        focus: true
+        modal: true
+        closePolicy: Popup.CloseOnEscape;
+
+        contentItem: ColumnLayout {
+
+            TextField {
+                id: userUpdateLogin
+                Layout.alignment: Qt.AlignCenter
+                placeholderText: "login"
+            }
+
+            TextField {
+                id: userUpdateEmail
+                Layout.alignment: Qt.AlignCenter
+                placeholderText: "email"
+            }
+
+            TextField {
+                id: userUpdatePassword
+                Layout.alignment: Qt.AlignCenter
+                placeholderText: "password"
+            }
+
+            ComboBox {
+                id: userUpdateRole
+                Layout.alignment: Qt.AlignCenter
+                model: ["", "admin", "mro", "accountant"]
+            }
+
+            MenuButton {
+                Layout.alignment: Qt.AlignCenter
+                onClicked: {
+                    if (UserRepository.update(userUpdateLogin.text,
+                                              userUpdateEmail.text,
+                                              userUpdateRole.currentIndex,
+                                              userUpdatePassword.text,
+                                              userUpdateForm.userIx)) {
                     }
                 }
             }

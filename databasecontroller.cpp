@@ -38,3 +38,8 @@ bool DatabaseController::deleteOne(const UserData &d)
 {
     return m_db.deleteOne(d);
 }
+
+bool DatabaseController::update(const UserData& newData, const UserData& userToUpdate, const QString &password)
+{
+    return m_db.update(newData, userToUpdate, password);
+}

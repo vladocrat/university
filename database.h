@@ -26,6 +26,8 @@ public:
     [[nodiscard]] QList<UserData> getAllUsers();
     [[nodiscard]] bool insert(const UserData&, const QString& password);
     [[nodiscard]] bool deleteOne(const UserData& d);
+    [[nodiscard]] bool update(const UserData& user, const UserData& userToUpdate, const QString& password);
+
 
 private:
    [[nodiscard]] bool executeQuery(QSqlQuery& query);
