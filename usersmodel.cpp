@@ -12,7 +12,6 @@ void UsersModel::addUser(const UserData& ud)
     endInsertRows();
 }
 
-///! TODO
 int UsersModel::rowCount(const QModelIndex &parent) const
 {
     return m_users.count();
@@ -20,8 +19,6 @@ int UsersModel::rowCount(const QModelIndex &parent) const
 
 QVariant UsersModel::data(const QModelIndex &index, int role) const
 {
-    Q_FUNC_INFO;
-
     if (index.row() < 0 || index.row() >= m_users.count()) {
             return QVariant();
         }

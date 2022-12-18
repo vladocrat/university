@@ -35,6 +35,8 @@ set(PROJECT_SOURCES
         DB_config.h
         usersmodel.h usersmodel.cpp
         baserepository.h
+        accessrightsrepository.h accessrightsrepository.cpp
+        accessrightsmodel.h accessrightsmodel.cpp
         qml.qrc
 )
 

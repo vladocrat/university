@@ -22,6 +22,12 @@ public:
     [[nodiscard]] bool deleteOne(const UserData& d);
     [[nodiscard]] bool update(const UserData& newData, const UserData& userToUpdate, const QString& password);
 
+    ///! accessrights
+    [[nodiscard]] QList<RoleString> getAllRoles();
+    [[nodiscard]] bool insert(const RoleString&);
+    [[nodiscard]] bool deleteOne(const RoleString&);
+    [[nodiscard]] bool update(const RoleString& oldData, const RoleString& newData);
+
 private:
     DatabaseController() = default;
     ~DatabaseController() = default;

@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.12
 import User 1.0
 import UserRepository 1.0
+import AccessRightsRepository 1.0
 
 Window {
     id: root
@@ -20,59 +21,6 @@ Window {
             var child = Qt.createComponent(windowName);
             var window = child.createObject(root);
             window.show();
-        }
-    }
-
-    Popup {
-        id: userUpdateForm
-
-        property int userIx: -1
-
-        x: Math.round((parent.width - width) / 2)
-        y: Math.round((parent.height - height) / 2)
-        width: root.width / 2
-        height: root.height / 1.3
-        focus: true
-        modal: true
-        closePolicy: Popup.CloseOnEscape;
-
-        contentItem: ColumnLayout {
-
-            TextField {
-                id: userUpdateLogin
-                Layout.alignment: Qt.AlignCenter
-                placeholderText: "login"
-            }
-
-            TextField {
-                id: userUpdateEmail
-                Layout.alignment: Qt.AlignCenter
-                placeholderText: "email"
-            }
-
-            TextField {
-                id: userUpdatePassword
-                Layout.alignment: Qt.AlignCenter
-                placeholderText: "password"
-            }
-
-            ComboBox {
-                id: userUpdateRole
-                Layout.alignment: Qt.AlignCenter
-                model: ["", "admin", "mro", "accountant"]
-            }
-
-            MenuButton {
-                Layout.alignment: Qt.AlignCenter
-                onClicked: {
-                    if (UserRepository.update(userUpdateLogin.text,
-                                              userUpdateEmail.text,
-                                              userUpdateRole.currentIndex,
-                                              userUpdatePassword.text,
-                                              userUpdateForm.userIx)) {
-                    }
-                }
-            }
         }
     }
 
@@ -179,6 +127,22 @@ Window {
                 }
             }
 
+            MenuButton {
+                Layout.alignment: Qt.AlignCenter
+                Layout.preferredHeight: 40
+                Layout.fillWidth: true
+                pressColor: "red"
+                btnText: "access rights"
+
+                onClicked: {
+                    if (accessRightsMenu.visible === true) {
+                        accessRightsMenu.visible = false;
+                    } else {
+                        accessRightsMenu.visible = true;
+                    }
+                }
+            }
+
             Item {
                 Layout.preferredHeight: parent.height - btn.height
                 Layout.preferredWidth: 1
@@ -223,7 +187,7 @@ Window {
 
         onGetAllClicked: {
             UserRepository.getAll();
-            resultList.visible = true;
+            usersResultList.visible = true;
         }
 
         onInsertClicked: {
@@ -239,8 +203,64 @@ Window {
         }
     }
 
+    ActionsMenu {
+        id: accessRightsMenu
+
+        anchors.top: topbar.bottom
+        anchors.left: mainMenu.right
+        height: root.height
+        width: root.width / 5
+
+        onGetAllClicked: {
+            AccessRightsRepository.getAll();
+            accessRighsResultList.visible = true;
+        }
+
+        onInsertClicked: {
+            insertPopup.open();
+        }
+
+        onDeleteClicked: {
+            AccessRightsRepository.getAll();
+            deletePopup.open();
+        }
+
+        onUpdateClicked: {
+            AccessRightsRepository.getAll();
+            updatePopup.open();
+        }
+    }
+
     ListView {
-        id: resultList
+        id: accessRighsResultList
+        anchors.left: studentMenu.right
+        anchors.top: topbar.bottom
+        width: root.width - mainMenu.width - studentMenu.width
+        height: root.height
+        visible: false
+        clip: true
+        model: accessRightsModel
+
+        delegate: Rectangle {
+            height: 50
+            width: parent.width
+            border.width: 1
+
+            ColumnLayout {
+                anchors.fill: parent
+                spacing: 2
+
+                EntityCell {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    text: "Name: " + model.name
+                }
+            }
+        }
+    }
+
+    ListView {
+        id: usersResultList
         anchors.left: studentMenu.right
         anchors.top: topbar.bottom
         width: root.width - mainMenu.width - studentMenu.width
@@ -297,7 +317,7 @@ Window {
                 id: insertFormChoice
 
                 Layout.alignment: Qt.AlignCenter
-                model: ["", "student", "contract", "gap year", "user"]
+                model: ["", "student", "contract", "gap year", "user", "role"]
             }
 
             ColumnLayout {
@@ -317,6 +337,7 @@ Window {
 
                 visible: insertFormChoice.currentIndex === 3
             }
+
 
             ColumnLayout {
                 id: userInsert
@@ -368,6 +389,31 @@ Window {
                     }
                 }
             }
+
+            ColumnLayout {
+                id: roleInsert
+
+                Layout.alignment: Qt.AlignCenter
+                visible: insertFormChoice.currentIndex === 5
+
+                Text {
+                    Layout.alignment: Qt.AlignCenter
+                    text: "INSERT ROLE"
+                }
+
+                TextField {
+                    id: name
+                    placeholderText: "role name";
+                }
+
+                MenuButton {
+                    onClicked: {
+                        if (AccessRightsRepository.insert(name.text)) {
+
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -395,11 +441,15 @@ Window {
                 id: deleteFormChoice
 
                 Layout.alignment: Qt.AlignCenter
-                model: ["", "student", "contract", "gap year", "user"]
+                model: ["", "student", "contract", "gap year", "user", "role"]
 
                 onCurrentIndexChanged: {
                     if (deleteFormChoice.currentIndex === 4) {
                         getAllUsers.visible = true;
+                    }
+
+                    if (deleteFormChoice.currentIndex === 5) {
+                        getAllAccessRights.visible = true;
                     }
                 }
             }
@@ -463,6 +513,47 @@ Window {
                         }
                     }
                 }
+
+                ListView {
+                    id: getAllAccessRights
+
+                    Layout.preferredHeight: parent.height
+                    Layout.preferredWidth: parent.width
+                    visible: false
+                    clip: true
+                    model: accessRightsModel
+
+                    onVisibleChanged: {
+                        AccessRightsRepository.getAll();
+                    }
+
+                    delegate: Rectangle {
+                        height: 50
+                        width: parent.width
+                        border.width: 1
+
+                        MouseArea {
+                            anchors.fill: parent
+
+                            onClicked: {
+                                if (AccessRightsRepository.deleteOne(index)) {
+
+                                }
+                            }
+                        }
+
+                        ColumnLayout {
+                            anchors.fill: parent
+                            spacing: 2
+
+                            EntityCell {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+                                text: "Role: " + model.name
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -491,11 +582,15 @@ Window {
                 id: updateFormChoice
 
                 Layout.alignment: Qt.AlignCenter
-                model: ["", "student", "contract", "gap year", "user"]
+                model: ["", "student", "contract", "gap year", "user", "role"]
 
                 onCurrentIndexChanged: {
                     if (updateFormChoice.currentIndex === 4) {
                         updateGetAllUsers.visible = true;
+                    }
+
+                    if (updateFormChoice.currentIndex === 5) {
+                        updateGetAllAccessRights.visible = true;
                     }
                 }
             }
@@ -504,7 +599,6 @@ Window {
                 Layout.preferredHeight: parent.height - updateFormChoice.height - 30
                 Layout.preferredWidth: parent.width  - 30
                 Layout.alignment: Qt.AlignCenter
-
 
                 ListView {
                     id: updateGetAllUsers
@@ -524,7 +618,6 @@ Window {
                             anchors.fill: parent
 
                             onClicked: {
-                                console.log("b")
                                 updatePopup.close();
                                 userUpdateForm.open();
                                 userUpdateForm.userIx = index;
@@ -555,12 +648,131 @@ Window {
                         }
                     }
                 }
+
+                ListView {
+                    id: updateGetAllAccessRights
+
+                    Layout.preferredHeight: parent.height
+                    Layout.preferredWidth: parent.width
+                    visible: false
+                    clip: true
+                    model: accessRightsModel
+
+                    delegate: Rectangle {
+                        height: 50
+                        width: parent.width
+                        border.width: 1
+
+                        MouseArea {
+                            anchors.fill: parent
+
+                            onClicked: {
+                                updatePopup.close();
+                                accessRightsUpdateForm.open();
+                                accessRightsUpdateForm.userIx = index;
+                            }
+                        }
+
+                        ColumnLayout {
+                            anchors.fill: parent
+                            spacing: 2
+
+                            EntityCell {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+                                text: "Name: " + model.name
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 
+    Popup {
+        id: userUpdateForm
 
+        property int userIx: -1
 
+        x: Math.round((parent.width - width) / 2)
+        y: Math.round((parent.height - height) / 2)
+        width: root.width / 2
+        height: root.height / 1.3
+        focus: true
+        modal: true
+        closePolicy: Popup.CloseOnEscape;
+
+        contentItem: ColumnLayout {
+
+            TextField {
+                id: userUpdateLogin
+                Layout.alignment: Qt.AlignCenter
+                placeholderText: "login"
+            }
+
+            TextField {
+                id: userUpdateEmail
+                Layout.alignment: Qt.AlignCenter
+                placeholderText: "email"
+            }
+
+            TextField {
+                id: userUpdatePassword
+                Layout.alignment: Qt.AlignCenter
+                placeholderText: "password"
+            }
+
+            ComboBox {
+                id: userUpdateRole
+                Layout.alignment: Qt.AlignCenter
+                model: ["", "admin", "mro", "accountant"]
+            }
+
+            MenuButton {
+                Layout.alignment: Qt.AlignCenter
+                onClicked: {
+                    if (UserRepository.update(userUpdateLogin.text,
+                                              userUpdateEmail.text,
+                                              userUpdateRole.currentIndex,
+                                              userUpdatePassword.text,
+                                              userUpdateForm.userIx)) {
+                    }
+                }
+            }
+        }
+    }
+
+    Popup {
+        id: accessRightsUpdateForm
+
+        property int userIx: -1
+
+        x: Math.round((parent.width - width) / 2)
+        y: Math.round((parent.height - height) / 2)
+        width: root.width / 2
+        height: root.height / 1.3
+        focus: true
+        modal: true
+        closePolicy: Popup.CloseOnEscape;
+
+        contentItem: ColumnLayout {
+
+            TextField {
+                id: accessRightsUpdateName
+                Layout.alignment: Qt.AlignCenter
+                placeholderText: "name"
+            }
+
+            MenuButton {
+                Layout.alignment: Qt.AlignCenter
+                onClicked: {
+                    if (AccessRightsRepository.update(accessRightsUpdateName.text,
+                                                      accessRightsUpdateForm.userIx)) {
+                    }
+                }
+            }
+        }
+    }
 }
 
 

@@ -245,6 +245,136 @@ bool Database::update(const UserData& newData, const UserData& userToUpdate, con
     return true;
 }
 
+QList<RoleString> Database::getAllAccessRights()
+{
+   QList<RoleString> ret;
+
+   if (!isOpen())
+   {
+       ERR("failed to fetch all access rights, no connection to db");
+       return ret;
+   }
+
+   QSqlQuery query;
+
+   if (!query.prepare("SELECT * FROM access_rights"))
+   {
+      ERR(m_db.lastError());
+      return ret;
+   }
+
+   if (!executeQuery(query))
+   {
+      ERR(m_db.lastError());
+      return ret;
+   }
+
+   auto typeIx = query.record().indexOf("access_rights_type");
+
+   while (query.next())
+   {
+       RoleString rs;
+       rs.name = query.value(typeIx).toString();
+
+       ret.append(rs);
+   }
+
+   LOGL("access rights fetched successfully");
+
+   return ret;
+}
+
+bool Database::insert(const RoleString& rs)
+{
+   if (!isOpen())
+   {
+       ERR("db connection isnt open");
+       return false;
+   }
+
+   QSqlQuery query;
+
+   if (!query.prepare("insert into access_rights (access_rights_type) \
+                      values (?)"))
+   {
+       ERR(m_db.lastError());
+       return false;
+   }
+
+   query.bindValue(0, rs.name);
+
+   if (!executeQuery(query))
+   {
+       ERR("failed to insert acess right: " + rs.name);
+       return false;
+   }
+
+   LOGL("access rights added successfully");
+
+   return true;
+}
+
+bool Database::deleteOne(const RoleString& rs)
+{
+    if (!isOpen())
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("delete from access_rights where access_rights_type=:type"))
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    query.bindValue(":type", rs.name, QSql::In);
+
+    if (!executeQuery(query))
+    {
+        ERR("failed to delete access right: " + rs.name);
+        return false;
+    }
+
+    LOGL("access right: " + rs.name +"  deleted successfully");
+
+    return true;
+}
+
+bool Database::update(const RoleString& oldData, const RoleString& newData)
+{
+    if (!isOpen())
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("update access_rights set \
+                        access_rights_type = :new \
+                        where access_rights_type = :old"))
+    {
+        ERR("failed to update access right: " + oldData.name);
+        return false;
+    }
+
+    query.bindValue(":new", newData.name, QSql::In);
+    query.bindValue(":old", oldData.name, QSql::In);
+
+    if (!executeQuery(query))
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    LOGL("updated access right:" + newData.name + " successfully");
+
+    return true;
+}
+
 bool Database::executeQuery(QSqlQuery& query)
 {
     if (!query.exec())

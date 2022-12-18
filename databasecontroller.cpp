@@ -43,3 +43,23 @@ bool DatabaseController::update(const UserData& newData, const UserData& userToU
 {
     return m_db.update(newData, userToUpdate, password);
 }
+
+QList<RoleString> DatabaseController::getAllRoles()
+{
+    return m_db.getAllAccessRights();
+}
+
+bool DatabaseController::insert(const RoleString& rs)
+{
+    return m_db.insert(rs);
+}
+
+bool DatabaseController::deleteOne(const RoleString& rs)
+{
+    return m_db.deleteOne(rs);
+}
+
+bool DatabaseController::update(const RoleString& oldData, const RoleString& newData)
+{
+    return m_db.update(oldData, newData);
+}

@@ -11,6 +11,10 @@ enum class Role : int
     Accountant
 };
 
+struct RoleString {
+    QString name;
+};
+
 struct RoleHash
 {
     std::size_t operator()(Role r) const

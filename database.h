@@ -28,6 +28,11 @@ public:
     [[nodiscard]] bool deleteOne(const UserData& d);
     [[nodiscard]] bool update(const UserData& user, const UserData& userToUpdate, const QString& password);
 
+    ///! accessrights
+    [[nodiscard]] QList<RoleString> getAllAccessRights();
+    [[nodiscard]] bool insert(const RoleString&);
+    [[nodiscard]] bool deleteOne(const RoleString&);
+    [[nodiscard]] bool update(const RoleString&, const RoleString&);
 
 private:
    [[nodiscard]] bool executeQuery(QSqlQuery& query);

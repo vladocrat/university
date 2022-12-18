@@ -13,9 +13,11 @@
 
 ///! repositories
 #include "userrepository.h"
+#include "accessrightsrepository.h"
 
 ///! models
 #include "usersmodel.h"
+#include "accessrightsmodel.h"
 
 #include <iostream>
 
@@ -29,6 +31,7 @@ static void registerTypes()
 
     ///! repositories
     userRepository->registerType();
+    accessRightsRepository->registerType();
 }
 
 static void initDB()
@@ -66,8 +69,10 @@ int main(int argc, char *argv[])
 
     initDB();
 
+    ///! models
     engine.addImportPath("qrc:/");
     engine.rootContext()->setContextProperty("usersModel", userRepository->model());
+    engine.rootContext()->setContextProperty("accessRightsModel", accessRightsRepository->model());
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
 
