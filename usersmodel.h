@@ -24,6 +24,7 @@ public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
 
     QList<UserData> list() const {return m_users;}
+    void clear();
 
     static void registerType()
     {

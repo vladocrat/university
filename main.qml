@@ -23,8 +23,57 @@ Window {
         }
     }
 
-    Component.onCompleted: {
-        //deletePopup.open();
+    Popup {
+        id: userUpdateForm
+
+        property int userIx: -1
+
+        x: Math.round((parent.width - width) / 2)
+        y: Math.round((parent.height - height) / 2)
+        width: root.width / 2
+        height: root.height / 1.3
+        focus: true
+        modal: true
+        closePolicy: Popup.CloseOnEscape;
+
+        contentItem: ColumnLayout {
+
+            TextField {
+                id: userUpdateLogin
+                Layout.alignment: Qt.AlignCenter
+                placeholderText: "login"
+            }
+
+            TextField {
+                id: userUpdateEmail
+                Layout.alignment: Qt.AlignCenter
+                placeholderText: "email"
+            }
+
+            TextField {
+                id: userUpdatePassword
+                Layout.alignment: Qt.AlignCenter
+                placeholderText: "password"
+            }
+
+            ComboBox {
+                id: userUpdateRole
+                Layout.alignment: Qt.AlignCenter
+                model: ["", "admin", "mro", "accountant"]
+            }
+
+            MenuButton {
+                Layout.alignment: Qt.AlignCenter
+                onClicked: {
+                    if (UserRepository.update(userUpdateLogin.text,
+                                              userUpdateEmail.text,
+                                              userUpdateRole.currentIndex,
+                                              userUpdatePassword.text,
+                                              userUpdateForm.userIx)) {
+                    }
+                }
+            }
+        }
     }
 
     Rectangle {
@@ -174,7 +223,6 @@ Window {
 
         onGetAllClicked: {
             UserRepository.getAll();
-            resultList.model = usersModel;
             resultList.visible = true;
         }
 
@@ -199,6 +247,7 @@ Window {
         height: root.height
         visible: false
         clip: true
+        model: usersModel
 
         delegate: Rectangle {
             height: 50
@@ -368,10 +417,10 @@ Window {
                     Layout.preferredWidth: parent.width
                     visible: false
                     clip: true
+                    model: usersModel
 
                     onVisibleChanged: {
                         UserRepository.getAll();
-                        getAllUsers.model = usersModel
                     }
 
                     delegate: Rectangle {
@@ -464,11 +513,7 @@ Window {
                     Layout.preferredWidth: parent.width
                     visible: false
                     clip: true
-
-                    onVisibleChanged: {
-                        UserRepository.getAll();
-                        updateGetAllUsers.model = usersModel
-                    }
+                    model: usersModel
 
                     delegate: Rectangle {
                         height: 50
@@ -479,9 +524,10 @@ Window {
                             anchors.fill: parent
 
                             onClicked: {
+                                console.log("b")
                                 updatePopup.close();
-                                userUpdateForm.userIx = index;
                                 userUpdateForm.open();
+                                userUpdateForm.userIx = index;
                             }
                         }
 
@@ -513,58 +559,8 @@ Window {
         }
     }
 
-    Popup {
-        id: userUpdateForm
 
-        property int userIx: -1
 
-        x: Math.round((parent.width - width) / 2)
-        y: Math.round((parent.height - height) / 2)
-        width: root.width / 2
-        height: root.height / 1.3
-        focus: true
-        modal: true
-        closePolicy: Popup.CloseOnEscape;
-
-        contentItem: ColumnLayout {
-
-            TextField {
-                id: userUpdateLogin
-                Layout.alignment: Qt.AlignCenter
-                placeholderText: "login"
-            }
-
-            TextField {
-                id: userUpdateEmail
-                Layout.alignment: Qt.AlignCenter
-                placeholderText: "email"
-            }
-
-            TextField {
-                id: userUpdatePassword
-                Layout.alignment: Qt.AlignCenter
-                placeholderText: "password"
-            }
-
-            ComboBox {
-                id: userUpdateRole
-                Layout.alignment: Qt.AlignCenter
-                model: ["", "admin", "mro", "accountant"]
-            }
-
-            MenuButton {
-                Layout.alignment: Qt.AlignCenter
-                onClicked: {
-                    if (UserRepository.update(userUpdateLogin.text,
-                                              userUpdateEmail.text,
-                                              userUpdateRole.currentIndex,
-                                              userUpdatePassword.text,
-                                              userUpdateForm.userIx)) {
-                    }
-                }
-            }
-        }
-    }
 }
 
 

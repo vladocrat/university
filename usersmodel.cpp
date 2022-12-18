@@ -20,6 +20,8 @@ int UsersModel::rowCount(const QModelIndex &parent) const
 
 QVariant UsersModel::data(const QModelIndex &index, int role) const
 {
+    Q_FUNC_INFO;
+
     if (index.row() < 0 || index.row() >= m_users.count()) {
             return QVariant();
         }
@@ -38,6 +40,13 @@ QVariant UsersModel::data(const QModelIndex &index, int role) const
         default:
             return QVariant();
         }
+}
+
+void UsersModel::clear()
+{
+    beginResetModel();
+    m_users.clear();
+    endResetModel();
 }
 
 void UsersModel::updateUsers(const UserData &ud)

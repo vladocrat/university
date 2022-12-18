@@ -109,6 +109,10 @@ struct UserData
         return true;
     }
 
+    ~UserData() {
+
+    }
+
     Role role = Role::Admin;
     std::string login = "none";
     std::string email;

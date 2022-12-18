@@ -5,14 +5,18 @@
 void UserRepository::getAll()
 {
     auto users = dbController->getAllUsers();
-    m_model.list().clear();
+
+    for (const auto& x : users)
+    {
+        qDebug() << x.toString();
+    }
+
+    qDebug() << m_model.list().count();
+    m_model.clear();
 
     for (const auto& x: users)
     {
-        if (!m_model.list().contains(x))
-        {
-            m_model.addUser(x);
-        }
+        m_model.addUser(x);
     }
 }
 
