@@ -22,10 +22,10 @@ public:
     [[nodiscard]] std::optional<UserData> login(const std::string& login, const std::string& password);
     [[nodiscard]] bool registration(const std::string& login, const std::string& email, const std::string& password);
 
-
-    ///! users
+    ///! userdata
     [[nodiscard]] QList<UserData> getAllUsers();
     [[nodiscard]] bool insert(const UserData&, const QString& password);
+    [[nodiscard]] bool deleteOne(const UserData& d);
 
 private:
    [[nodiscard]] bool executeQuery(QSqlQuery& query);

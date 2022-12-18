@@ -25,12 +25,17 @@ bool UserRepository::insert(const QString& login, const QString& email, const QS
     return dbController->insert(ud, password);
 }
 
-bool UserRepository::deleteOne(const UserRepository &)
+bool UserRepository::deleteOne(int i)
 {
-    return {};
+    return dbController->deleteOne(m_model.list()[i]);
 }
 
 bool UserRepository::update(const UserRepository &)
 {
     return {};
+}
+
+int UserRepository::userCount()
+{
+    return m_model.list().count();
 }

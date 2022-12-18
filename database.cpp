@@ -169,6 +169,38 @@ bool Database::insert(const UserData& ud, const QString& password)
     return true;
 }
 
+bool Database::deleteOne(const UserData &d)
+{
+    if (!isOpen())
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("delete from users where \
+                        user_login = :login and user_email = :email \
+                        and access_rights_id = :role"))
+    {
+        ERR(m_db.lastError());
+    }
+
+    query.bindValue(":login", QString::fromStdString(d.login), QSql::In);
+    query.bindValue(":email", QString::fromStdString(d.email), QSql::In);
+    query.bindValue(":role", QString::number(roleToInt(d.role)), QSql::In);
+
+    if (!executeQuery(query))
+    {
+        ERR("failed to delete user: " + d.toString());
+        return false;
+    }
+
+    LOGL("user deleted successfully");
+
+    return true;
+}
+
 bool Database::executeQuery(QSqlQuery& query)
 {
     if (!query.exec())

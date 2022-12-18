@@ -24,8 +24,7 @@ Window {
     }
 
     Component.onCompleted: {
-        //root.visible = false;
-        //internal.openChildWindow("LoginForm.qml");
+        deletePopup.open();
     }
 
     Rectangle {
@@ -182,6 +181,10 @@ Window {
         onInsertClicked: {
             insertPopup.open();
         }
+
+        onDeleteClicked: {
+            deletePopup.open();
+        }
     }
 
     ListView {
@@ -238,7 +241,7 @@ Window {
             anchors.fill: parent
 
             ComboBox {
-                id: formChoice
+                id: insertFormChoice
 
                 Layout.alignment: Qt.AlignCenter
                 model: ["", "student", "contract", "gap year", "user"]
@@ -247,26 +250,26 @@ Window {
             ColumnLayout {
                 id: studentInsert
 
-                visible: formChoice.currentIndex === 1
+                visible: insertFormChoice.currentIndex === 1
             }
 
             ColumnLayout {
                 id: contractInsert
 
-                visible: formChoice.currentIndex === 2
+                visible: insertFormChoice.currentIndex === 2
             }
 
             ColumnLayout {
                 id: gapyearInsert
 
-                visible: formChoice.currentIndex === 3
+                visible: insertFormChoice.currentIndex === 3
             }
 
             ColumnLayout {
                 id: userInsert
 
                 Layout.alignment: Qt.AlignCenter
-                visible: formChoice.currentIndex === 4
+                visible: insertFormChoice.currentIndex === 4
 
                 Text {
                     Layout.alignment: Qt.AlignCenter
@@ -317,5 +320,103 @@ Window {
             }
         }
     }
+
+    Popup {
+        id: deletePopup
+
+        x: Math.round((parent.width - width) / 2)
+        y: Math.round((parent.height - height) / 2)
+        width: root.width / 2
+        height: root.height / 1.3
+        focus: true
+        modal: true
+        closePolicy: Popup.CloseOnEscape;
+
+        contentItem: ColumnLayout {
+            anchors.fill: parent
+
+            Text {
+                Layout.alignment: Qt.AlignCenter
+                text: "DELETE"
+                font.pointSize: 12
+            }
+
+            ComboBox {
+                id: deleteFormChoice
+
+                Layout.alignment: Qt.AlignCenter
+                model: ["", "student", "contract", "gap year", "user"]
+
+                onCurrentIndexChanged: {
+                    if (deleteFormChoice.currentIndex === 4) {
+                        getAllUsers.visible = true;
+                    }
+                }
+            }
+
+            ColumnLayout {
+                Layout.preferredHeight: parent.height - deleteFormChoice.height - 30
+                Layout.preferredWidth: parent.width  - 30
+                Layout.alignment: Qt.AlignCenter
+
+
+                ListView {
+                    id: getAllUsers
+
+                    Layout.preferredHeight: parent.height
+                    Layout.preferredWidth: parent.width
+                    visible: false
+                    clip: true
+
+                    onVisibleChanged: {
+                        UserRepository.getAll();
+                        getAllUsers.model = usersModel
+                    }
+
+                    delegate: Rectangle {
+                        height: 50
+                        width: parent.width
+                        border.width: 1
+
+                        MouseArea {
+                            anchors.fill: parent
+
+                            onClicked: {
+                                console.log(index);
+                                UserRepository.deleteOne(index)
+                            }
+                        }
+
+                        ColumnLayout {
+                            anchors.fill: parent
+                            spacing: 2
+
+                            EntityCell {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+                                text: "Role: " + model.role
+                            }
+
+                            EntityCell {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+                                text: "Login: " + model.login
+                            }
+
+                            EntityCell {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+                                text: "Email: " + model.email
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
+
+
+
+
 

@@ -15,8 +15,11 @@ public:
 
     [[nodiscard]] bool connect(const DB::Settings& s);
     [[nodiscard]] bool login(const std::string& login, const std::string& password);
+
+    ///! userdata
     [[nodiscard]] QList<UserData> getAllUsers();
     [[nodiscard]] bool insert(const UserData& d, const QString& password);
+    [[nodiscard]] bool deleteOne(const UserData& d);
 
 private:
     DatabaseController() = default;

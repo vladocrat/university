@@ -33,3 +33,8 @@ bool DatabaseController::insert(const UserData &d, const QString &password)
 {
     return m_db.insert(d, password);
 }
+
+bool DatabaseController::deleteOne(const UserData &d)
+{
+    return m_db.deleteOne(d);
+}
