@@ -7,6 +7,7 @@
 
 #include "userdata.h"
 #include "dbsettings.h"
+#include "group.h"
 
 namespace DB {
 
@@ -33,6 +34,12 @@ public:
     [[nodiscard]] bool insert(const RoleString&);
     [[nodiscard]] bool deleteOne(const RoleString&);
     [[nodiscard]] bool update(const RoleString&, const RoleString&);
+
+    ///! group
+    [[nodiscard]] QList<Group> getAllGroups();
+    [[nodiscard]] bool insert(const Group&);
+    [[nodiscard]] bool deleteOne(const Group&);
+    [[nodiscard]] bool update(const Group&, const Group&);
 
 private:
    [[nodiscard]] bool executeQuery(QSqlQuery& query);

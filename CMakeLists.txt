@@ -37,6 +37,8 @@ set(PROJECT_SOURCES
         baserepository.h
         accessrightsrepository.h accessrightsrepository.cpp
         accessrightsmodel.h accessrightsmodel.cpp
+        grouprepository.h grouprepository.cpp
+        groupmodel.h groupmodel.cpp
         qml.qrc
 )
 

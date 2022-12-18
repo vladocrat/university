@@ -63,3 +63,23 @@ bool DatabaseController::update(const RoleString& oldData, const RoleString& new
 {
     return m_db.update(oldData, newData);
 }
+
+QList<Group> DatabaseController::getAllGroups()
+{
+    return m_db.getAllGroups();
+}
+
+bool DatabaseController::insert(const Group& g)
+{
+    return m_db.insert(g);
+}
+
+bool DatabaseController::deleteOne(const Group& g)
+{
+    return m_db.deleteOne(g);
+}
+
+bool DatabaseController::update(const Group& oldData, const Group& newData)
+{
+    return m_db.update(oldData, newData);
+}

@@ -375,6 +375,136 @@ bool Database::update(const RoleString& oldData, const RoleString& newData)
     return true;
 }
 
+QList<Group> Database::getAllGroups()
+{
+    QList<Group> ret;
+
+    if (!isOpen())
+    {
+        ERR("failed to fetch all groups, no connection to db");
+        return ret;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("SELECT * FROM groups"))
+    {
+       ERR(m_db.lastError());
+       return ret;
+    }
+
+    if (!executeQuery(query))
+    {
+       ERR(m_db.lastError());
+       return ret;
+    }
+
+    auto nameIx = query.record().indexOf("student_group_name");
+
+    while (query.next())
+    {
+        Group g;
+        g.name = query.value(nameIx).toString();
+
+        ret.append(g);
+    }
+
+    LOGL("groups fetched successfully");
+
+    return ret;
+}
+
+bool Database::insert(const Group& g)
+{
+    if (!isOpen())
+    {
+        ERR("db connection isnt open");
+        return false;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("insert into groups (student_group_name) \
+                       values (?)"))
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    query.bindValue(0, g.name);
+
+    if (!executeQuery(query))
+    {
+        ERR("failed to insert group: " + g.name);
+        return false;
+    }
+
+    LOGL("group added successfully");
+
+    return true;
+}
+
+bool Database::deleteOne(const Group& g)
+{
+    if (!isOpen())
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("delete from groups where student_group_name=:name"))
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    query.bindValue(":name", g.name, QSql::In);
+
+    if (!executeQuery(query))
+    {
+        ERR("failed to delete group: " + g.name);
+        return false;
+    }
+
+    LOGL("group: " + g.name +"  deleted successfully");
+
+    return true;
+}
+
+bool Database::update(const Group& oldData, const Group& newData)
+{
+    if (!isOpen())
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("update groups set \
+                        student_group_name = :new \
+                        where student_group_name = :old"))
+    {
+        ERR("failed to update group: " + oldData.name);
+        return false;
+    }
+
+    query.bindValue(":new", newData.name, QSql::In);
+    query.bindValue(":old", oldData.name, QSql::In);
+
+    if (!executeQuery(query))
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    LOGL("updated group:" + newData.name + " successfully");
+
+    return true;
+}
+
 bool Database::executeQuery(QSqlQuery& query)
 {
     if (!query.exec())

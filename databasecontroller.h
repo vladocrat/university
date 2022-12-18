@@ -28,6 +28,12 @@ public:
     [[nodiscard]] bool deleteOne(const RoleString&);
     [[nodiscard]] bool update(const RoleString& oldData, const RoleString& newData);
 
+    ///! group
+    [[nodiscard]] QList<Group> getAllGroups();
+    [[nodiscard]] bool insert(const Group&);
+    [[nodiscard]] bool deleteOne(const Group&);
+    [[nodiscard]] bool update(const Group& oldData, const Group& newData);
+
 private:
     DatabaseController() = default;
     ~DatabaseController() = default;

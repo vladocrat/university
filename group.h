@@ -1,13 +1,9 @@
 #pragma once
 
-#include <string>
+#include <QString>
 
-class Group
+struct Group
 {
-public:
-    Group(const std::string& name) : m_name(name){};
-
-private:
-    std::string m_name;
+    QString name;
 };
 
