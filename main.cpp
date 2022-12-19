@@ -15,11 +15,13 @@
 #include "userrepository.h"
 #include "accessrightsrepository.h"
 #include "grouprepository.h"
+#include "contracttyperepository.h"
 
 ///! models
 #include "usersmodel.h"
 #include "accessrightsmodel.h"
 #include "groupmodel.h"
+#include "contracttypemodel.h"
 
 #include <iostream>
 
@@ -35,6 +37,7 @@ static void registerTypes()
     userRepository->registerType();
     accessRightsRepository->registerType();
     groupRepository->registerType();
+    contractTypeRepository->registerType();
 }
 
 static void initDB()
@@ -77,6 +80,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("usersModel", userRepository->model());
     engine.rootContext()->setContextProperty("accessRightsModel", accessRightsRepository->model());
     engine.rootContext()->setContextProperty("groupModel", groupRepository->model());
+    engine.rootContext()->setContextProperty("contractTypeModel", contractTypeRepository->model());
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
 

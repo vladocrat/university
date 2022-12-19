@@ -24,8 +24,8 @@ public:
 
     static void registerType()
     {
-        qmlRegisterUncreatableType<AccessRightsModel>("UsersModel", 1, 0, "UsersModel",
-                                               "Cant create instance of UsersModel");
+        qmlRegisterUncreatableType<AccessRightsModel>("AccessRightsModel", 1, 0, "AccessRightsModel",
+                                               "Cant create instance of AccessRightsModel");
     }
 
 protected:

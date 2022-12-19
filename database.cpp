@@ -502,6 +502,136 @@ bool Database::update(const Group& oldData, const Group& newData)
 
     LOGL("updated group:" + newData.name + " successfully");
 
+                       return true;
+}
+
+QList<ContractType> Database::getAllContractTypes()
+{
+    QList<ContractType> ret;
+
+    if (!isOpen())
+    {
+        ERR("failed to fetch all ContractTypes, no connection to db");
+        return ret;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("SELECT * FROM contract_type"))
+    {
+       ERR(m_db.lastError());
+       return ret;
+    }
+
+    if (!executeQuery(query))
+    {
+       ERR(m_db.lastError());
+       return ret;
+    }
+
+    auto nameIx = query.record().indexOf("contract_type");
+
+    while (query.next())
+    {
+        ContractType ct;
+        ct.name = query.value(nameIx).toString();
+
+        ret.append(ct);
+    }
+
+    LOGL("contract types fetched successfully");
+
+    return ret;
+}
+
+bool Database::insert(const ContractType& ct)
+{
+    if (!isOpen())
+    {
+        ERR("db connection isnt open");
+        return false;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("insert into contract_type (contract_type) \
+                       values (?)"))
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    query.bindValue(0, ct.name);
+
+    if (!executeQuery(query))
+    {
+        ERR("failed to insert ContractType: " + ct.name);
+        return false;
+    }
+
+    LOGL("ContractType added successfully");
+
+    return true;
+}
+
+bool Database::deleteOne(const ContractType& ct)
+{
+    if (!isOpen())
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("delete from contract_type where contract_type=:name"))
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    query.bindValue(":name", ct.name, QSql::In);
+
+    if (!executeQuery(query))
+    {
+        ERR("failed to delete ContractType: " + ct.name);
+        return false;
+    }
+
+    LOGL("ContractType: " + ct.name +"  deleted successfully");
+
+    return true;
+}
+
+bool Database::update(const ContractType& oldData, const ContractType& newData)
+{
+    if (!isOpen())
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("update contract_type set \
+                        contract_type = :new \
+                        where contract_type = :old"))
+    {
+        ERR("failed to update contract_type: " + oldData.name);
+        return false;
+    }
+
+    query.bindValue(":new", newData.name, QSql::In);
+    query.bindValue(":old", oldData.name, QSql::In);
+
+    if (!executeQuery(query))
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    LOGL("updated contract_type:" + newData.name + " successfully");
+
     return true;
 }
 

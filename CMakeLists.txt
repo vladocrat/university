@@ -39,6 +39,9 @@ set(PROJECT_SOURCES
         accessrightsmodel.h accessrightsmodel.cpp
         grouprepository.h grouprepository.cpp
         groupmodel.h groupmodel.cpp
+        contracttype.h contracttype.cpp
+        contracttyperepository.h contracttyperepository.cpp
+        contracttypemodel.h contracttypemodel.cpp
         qml.qrc
 )
 

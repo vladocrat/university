@@ -8,6 +8,7 @@
 
 class GroupModel : public QAbstractListModel
 {
+    Q_OBJECT
 public:
     enum GroupRoles {
         NameRole

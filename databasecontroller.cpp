@@ -83,3 +83,23 @@ bool DatabaseController::update(const Group& oldData, const Group& newData)
 {
     return m_db.update(oldData, newData);
 }
+
+QList<ContractType> DatabaseController::getAllContractTypes()
+{
+    return m_db.getAllContractTypes();
+}
+
+bool DatabaseController::insert(const ContractType& ct)
+{
+    return m_db.insert(ct);
+}
+
+bool DatabaseController::deleteOne(const ContractType& ct)
+{
+    return m_db.deleteOne(ct);
+}
+
+bool DatabaseController::update(const ContractType &oldData, const ContractType &newData)
+{
+    return m_db.update(oldData, newData);
+}

@@ -6,6 +6,7 @@ import User 1.0
 import UserRepository 1.0
 import AccessRightsRepository 1.0
 import GroupRepository 1.0
+import ContractTypeRepository 1.0
 
 Window {
     id: root
@@ -160,6 +161,22 @@ Window {
                 }
             }
 
+            MenuButton {
+                Layout.alignment: Qt.AlignCenter
+                Layout.preferredHeight: 40
+                Layout.fillWidth: true
+                pressColor: "red"
+                btnText: "contract type"
+
+                onClicked: {
+                    if (contractTypeMenu.visible === true) {
+                        contractTypeMenu.visible = false;
+                    } else {
+                        contractTypeMenu.visible = true;
+                    }
+                }
+            }
+
             Item {
                 Layout.preferredHeight: parent.height - btn.height
                 Layout.preferredWidth: 1
@@ -276,6 +293,34 @@ Window {
         }
     }
 
+    ActionsMenu {
+        id: contractTypeMenu
+
+        anchors.top: topbar.bottom
+        anchors.left: mainMenu.right
+        height: root.height
+        width: root.width / 5
+
+        onGetAllClicked: {
+            ContractTypeRepository.getAll();
+            contractTypeResultList.visible = true;
+        }
+
+        onInsertClicked: {
+            insertPopup.open();
+        }
+
+        onDeleteClicked: {
+            ContractTypeRepository.getAll();
+            deletePopup.open();
+        }
+
+        onUpdateClicked: {
+            ContractTypeRepository.getAll();
+            updatePopup.open();
+        }
+    }
+
     ListView {
         id: accessRighsResultList
         anchors.left: studentMenu.right
@@ -372,6 +417,35 @@ Window {
         }
     }
 
+    ListView {
+        id: contractTypeResultList
+        anchors.left: studentMenu.right
+        anchors.top: topbar.bottom
+        width: root.width - mainMenu.width - studentMenu.width
+        height: root.height
+        visible: false
+        clip: true
+        model: contractTypeModel
+
+        delegate: Rectangle {
+            height: 50
+            width: parent.width
+            border.width: 1
+
+            ColumnLayout {
+                anchors.fill: parent
+                spacing: 2
+
+                EntityCell {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    text: "Name: " + model.name
+                }
+            }
+        }
+    }
+
+
     Popup {
         id: insertPopup
 
@@ -390,7 +464,7 @@ Window {
                 id: insertFormChoice
 
                 Layout.alignment: Qt.AlignCenter
-                model: ["", "student", "contract", "gap year", "user", "role", "group"]
+                model: ["", "student", "contract", "gap year", "user", "role", "group", "contract type"]
             }
 
             ColumnLayout {
@@ -512,6 +586,31 @@ Window {
                     }
                 }
             }
+
+            ColumnLayout {
+                id: contractTypeInsert
+
+                Layout.alignment: Qt.AlignCenter
+                visible: insertFormChoice.currentIndex === 7
+
+                Text {
+                    Layout.alignment: Qt.AlignCenter
+                    text: "INSERT CONTRACT TYPES"
+                }
+
+                TextField {
+                    id: contractTypeName
+                    placeholderText: "contract type name";
+                }
+
+                MenuButton {
+                    onClicked: {
+                        if (ContractTypeRepository.insert(contractTypeName.text)) {
+
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -539,7 +638,7 @@ Window {
                 id: deleteFormChoice
 
                 Layout.alignment: Qt.AlignCenter
-                model: ["", "student", "contract", "gap year", "user", "role", "group"]
+                model: ["", "student", "contract", "gap year", "user", "role", "group", "contract type"]
 
                 onCurrentIndexChanged: {
                     if (deleteFormChoice.currentIndex === 4) {
@@ -552,6 +651,10 @@ Window {
 
                     if (deleteFormChoice.currentIndex === 6) {
                         getAllGroups.visible = true;
+                    }
+
+                    if (deleteFormChoice.currentIndex === 7) {
+                        getAllContractTypes.visible = true;
                     }
                 }
             }
@@ -697,6 +800,47 @@ Window {
                         }
                     }
                 }
+
+                ListView {
+                    id: getAllContractTypes
+
+                    Layout.preferredHeight: parent.height
+                    Layout.preferredWidth: parent.width
+                    visible: false
+                    clip: true
+                    model: contractTypeModel
+
+                    onVisibleChanged: {
+                        ContractTypeRepository.getAll();
+                    }
+
+                    delegate: Rectangle {
+                        height: 50
+                        width: parent.width
+                        border.width: 1
+
+                        MouseArea {
+                            anchors.fill: parent
+
+                            onClicked: {
+                                if (ContractTypeRepository.deleteOne(index)) {
+
+                                }
+                            }
+                        }
+
+                        ColumnLayout {
+                            anchors.fill: parent
+                            spacing: 2
+
+                            EntityCell {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+                                text: "Name: " + model.name
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -725,7 +869,7 @@ Window {
                 id: updateFormChoice
 
                 Layout.alignment: Qt.AlignCenter
-                model: ["", "student", "contract", "gap year", "user", "role", "group"]
+                model: ["", "student", "contract", "gap year", "user", "role", "group", "contract type"]
 
                 onCurrentIndexChanged: {
                     if (updateFormChoice.currentIndex === 4) {
@@ -738,6 +882,10 @@ Window {
 
                     if (updateFormChoice.currentIndex === 6) {
                         updateGetAllGroups.visible = true;
+                    }
+
+                    if (updateFormChoice.currentIndex === 7) {
+                        updateGetAllContractTypes.visible = true;
                     }
                 }
             }
@@ -869,6 +1017,43 @@ Window {
                         }
                     }
                 }
+
+                ListView {
+                    id: updateGetAllContractTypes
+
+                    Layout.preferredHeight: parent.height
+                    Layout.preferredWidth: parent.width
+                    visible: false
+                    clip: true
+                    model: contractTypeModel
+
+                    delegate: Rectangle {
+                        height: 50
+                        width: parent.width
+                        border.width: 1
+
+                        MouseArea {
+                            anchors.fill: parent
+
+                            onClicked: {
+                                updatePopup.close();
+                                contractTypeUpdateForm.open();
+                                contractTypeUpdateForm.userIx = index;
+                            }
+                        }
+
+                        ColumnLayout {
+                            anchors.fill: parent
+                            spacing: 2
+
+                            EntityCell {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+                                text: "Name: " + model.name
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -983,7 +1168,39 @@ Window {
                 Layout.alignment: Qt.AlignCenter
                 onClicked: {
                     if (GroupRepository.update(groupUpdateName.text,
-                                                      groupsUpdateForm.userIx)) {
+                                               groupsUpdateForm.userIx)) {
+                    }
+                }
+            }
+        }
+    }
+
+    Popup {
+        id: contractTypeUpdateForm
+
+        property int userIx: -1
+
+        x: Math.round((parent.width - width) / 2)
+        y: Math.round((parent.height - height) / 2)
+        width: root.width / 2
+        height: root.height / 1.3
+        focus: true
+        modal: true
+        closePolicy: Popup.CloseOnEscape;
+
+        contentItem: ColumnLayout {
+
+            TextField {
+                id: contractTypeUpdateName
+                Layout.alignment: Qt.AlignCenter
+                placeholderText: "name"
+            }
+
+            MenuButton {
+                Layout.alignment: Qt.AlignCenter
+                onClicked: {
+                    if (ContractTypeRepository.update(contractTypeUpdateName.text,
+                                              contractTypeUpdateForm.userIx)) {
                     }
                 }
             }

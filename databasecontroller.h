@@ -2,6 +2,8 @@
 
 #include "database.h"
 #include "dbsettings.h"
+#include "contracttype.h"
+
 #include <optional>
 
 class DatabaseController final
@@ -33,6 +35,12 @@ public:
     [[nodiscard]] bool insert(const Group&);
     [[nodiscard]] bool deleteOne(const Group&);
     [[nodiscard]] bool update(const Group& oldData, const Group& newData);
+
+    ///! contracttype
+    [[nodiscard]] QList<ContractType> getAllContractTypes();
+    [[nodiscard]] bool insert(const ContractType&);
+    [[nodiscard]] bool deleteOne(const ContractType&);
+    [[nodiscard]] bool update(const ContractType& oldData, const ContractType& newData);
 
 private:
     DatabaseController() = default;
