@@ -123,3 +123,23 @@ bool DatabaseController::update(const Document &oldData, const Document &newData
 {
     return m_db.update(oldData, newData);
 }
+
+QList<GapYear> DatabaseController::getAllGapYears()
+{
+    return m_db.getAllGapYears();
+}
+
+bool DatabaseController::insert(const GapYear& gy)
+{
+    return m_db.insert(gy);
+}
+
+bool DatabaseController::deleteOne(const GapYear& gy)
+{
+    return m_db.deleteOne(gy);
+}
+
+bool DatabaseController::update(const GapYear &oldData, const GapYear &newData)
+{
+    return m_db.update(oldData, newData);
+}

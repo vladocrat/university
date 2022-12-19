@@ -46,6 +46,8 @@ set(PROJECT_SOURCES
         document.h
         documentrepository.h documentrepository.cpp
         documentmodel.h documentmodel.cpp
+        gapyearmodel.h gapyearmodel.cpp
+        gapyearrepository.h gapyearrepository.cpp
         qml.qrc
 )
 

@@ -4,6 +4,7 @@
 #include "dbsettings.h"
 #include "contracttype.h"
 #include "document.h"
+#include "GapYear.h"
 
 #include <optional>
 
@@ -43,11 +44,17 @@ public:
     [[nodiscard]] bool deleteOne(const ContractType&);
     [[nodiscard]] bool update(const ContractType& oldData, const ContractType& newData);
 
-    ///! gapyear
+    ///! documents
     [[nodiscard]] QList<Document> getAllDocuments();
     [[nodiscard]] bool insert(const Document&);
     [[nodiscard]] bool deleteOne(const Document&);
     [[nodiscard]] bool update(const Document& oldData, const Document& newData);
+
+    ///! gayear
+    [[nodiscard]] QList<GapYear> getAllGapYears();
+    [[nodiscard]] bool insert(const GapYear&);
+    [[nodiscard]] bool deleteOne(const GapYear&);
+    [[nodiscard]] bool update(const GapYear& oldData, const GapYear& newData);
 
 private:
     DatabaseController() = default;

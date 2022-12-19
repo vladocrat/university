@@ -10,6 +10,7 @@
 #include "group.h"
 #include "contracttype.h"
 #include "document.h"
+#include "GapYear.h"
 
 namespace DB {
 
@@ -54,6 +55,12 @@ public:
     [[nodiscard]] bool insert(const Document&);
     [[nodiscard]] bool deleteOne(const Document&);
     [[nodiscard]] bool update(const Document&, const Document&);
+
+    ///! gapyear
+    [[nodiscard]] QList<GapYear> getAllGapYears();
+    [[nodiscard]] bool insert(const GapYear&);
+    [[nodiscard]] bool deleteOne(const GapYear&);
+    [[nodiscard]] bool update(const GapYear&, const GapYear&);
 
 private:
    [[nodiscard]] bool executeQuery(QSqlQuery& query);

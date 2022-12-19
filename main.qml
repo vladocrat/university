@@ -8,6 +8,7 @@ import AccessRightsRepository 1.0
 import GroupRepository 1.0
 import ContractTypeRepository 1.0
 import DocumentRepository 1.0
+import GapYearRepository 1.0
 
 Window {
     id: root
@@ -228,8 +229,8 @@ Window {
         width: root.width / 5
 
         onGetAllClicked: {
-            ContractTypeRepository.getAll();
-            contractTypeResultList.visible = true;
+            GapYearRepository.getAll();
+            gapYearResultList.visible = true;
         }
 
         onInsertClicked: {
@@ -237,12 +238,12 @@ Window {
         }
 
         onDeleteClicked: {
-            ContractTypeRepository.getAll();
+            GapYearRepository.getAll();
             deletePopup.open();
         }
 
         onUpdateClicked: {
-            ContractTypeRepository.getAll();
+            GapYearRepository.getAll();
             updatePopup.open();
         }
     }
@@ -385,6 +386,53 @@ Window {
         }
     }
 
+
+
+    ListView {
+        id: gapYearResultList
+        anchors.left: studentMenu.right
+        anchors.top: topbar.bottom
+        width: root.width - mainMenu.width - studentMenu.width
+        height: root.height
+        visible: false
+        clip: true
+        model: gapYearModel
+
+        delegate: Rectangle {
+            height: 75
+            width: parent.width
+            border.width: 1
+
+            ColumnLayout {
+                anchors.fill: parent
+                spacing: 2
+
+                EntityCell {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    text: "Creator: " + model.creatorLogin
+                }
+
+                EntityCell {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    text: "Server Location: " + model.docPath
+                }
+
+                EntityCell {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    text: "Start Date: " + model.startDate
+                }
+
+                EntityCell {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    text: "End Date: " + model.endDate
+                }
+            }
+        }
+    }
 
     ListView {
         id: accessRighsResultList

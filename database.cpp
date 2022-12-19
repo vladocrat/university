@@ -765,6 +765,78 @@ bool Database::update(const Document& oldData, const Document& newData)
     return true;
 }
 
+QList<GapYear> Database::getAllGapYears()
+{
+    QList<GapYear> ret;
+
+    if (!isOpen())
+    {
+        ERR("failed to fetch all GapYears, no connection to db");
+        return ret;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("select cap_year_start, cap_year_end, documents_file_location, user_login, \
+                       user_email, access_rights_type from cap_year_journal c \
+                       join documents on c.documents_document_id = documents.documents_document_id \
+                       join users on c.user_id = users.user_id \
+                       join access_rights as ar on ar.access_rights_id = users.access_rights_id"))
+    {
+       ERR(m_db.lastError());
+       return ret;
+    }
+
+    if (!executeQuery(query))
+    {
+       ERR(m_db.lastError());
+       return ret;
+    }
+
+    auto gapYearStartIx = query.record().indexOf("cap_year_start");
+    auto gapYearEndIx = query.record().indexOf("cap_year_end");
+    auto pathIx = query.record().indexOf("documents_file_location");
+    auto userLoginIx = query.record().indexOf("user_login");
+    auto userEmailIx = query.record().indexOf("user_email");
+    auto userRoleIx = query.record().indexOf("access_rights_type");
+
+    while (query.next())
+    {
+        UserData* ud = new UserData;
+        ud->login = query.value(userLoginIx).toString().toStdString();
+        ud->email = query.value(userEmailIx).toString().toStdString();
+        ud->role = stringToRole(query.value(userRoleIx).toString());
+        Document d;
+        d.path = query.value(pathIx).toString();
+        GapYear gy;
+        gy.creator = ud;
+        gy.document = d;
+        gy.start_date = query.value(gapYearStartIx).toString();
+        gy.end_date = query.value(gapYearEndIx).toString();
+
+        ret.append(gy);
+    }
+
+    LOGL("GapYears fetched successfully");
+
+    return ret;
+}
+
+bool Database::insert(const GapYear &)
+{
+    return false;
+}
+
+bool Database::deleteOne(const GapYear &)
+{
+return false;
+}
+
+bool Database::update(const GapYear &, const GapYear &)
+{
+return false;
+}
+
 bool Database::executeQuery(QSqlQuery& query)
 {
     if (!query.exec())
