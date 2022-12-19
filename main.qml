@@ -386,7 +386,6 @@ Window {
     }
 
 
-
     ListView {
         id: accessRighsResultList
         anchors.left: studentMenu.right
@@ -417,6 +416,7 @@ Window {
 
     ListView {
         id: usersResultList
+
         anchors.left: studentMenu.right
         anchors.top: topbar.bottom
         width: root.width - mainMenu.width - studentMenu.width
@@ -464,6 +464,10 @@ Window {
         visible: false
         clip: true
         model: groupModel
+
+        onVisibleChanged: {
+            GroupRepository.getAll();
+        }
 
         delegate: Rectangle {
             height: 50
@@ -761,6 +765,12 @@ Window {
                 model: ["", "student", "contract", "gap year", "user", "role", "group", "contract type", "document"]
 
                 onCurrentIndexChanged: {
+                    getAllUsers.visible = false;
+                    getAllAccessRights.visible = false;
+                    getAllGroups.visible = false;
+                    getAllContractTypes.visible = false;
+                    getAllDocuments.visible = false;
+
                     if (deleteFormChoice.currentIndex === 4) {
                         getAllUsers.visible = true;
                     }
@@ -1037,6 +1047,12 @@ Window {
                 model: ["", "student", "contract", "gap year", "user", "role", "group", "contract type", "document"]
 
                 onCurrentIndexChanged: {
+                    updateGetAllUsers.visible = false;
+                    updateGetAllAccessRights.visible = false;
+                    updateGetAllGroups.visible = false;
+                    updateGetAllContractTypes.visible = false;
+                    updateGetAllDocuments.visible = false;
+
                     if (updateFormChoice.currentIndex === 4) {
                         updateGetAllUsers.visible = true;
                     }
@@ -1072,6 +1088,10 @@ Window {
                     visible: false
                     clip: true
                     model: usersModel
+
+                    onVisibleChanged: {
+                        UserRepository.getAll();
+                    }
 
                     delegate: Rectangle {
                         height: 50
@@ -1122,6 +1142,10 @@ Window {
                     clip: true
                     model: accessRightsModel
 
+                    onVisibleChanged: {
+                        AccessRightsRepository.getAll();
+                    }
+
                     delegate: Rectangle {
                         height: 50
                         width: parent.width
@@ -1158,6 +1182,10 @@ Window {
                     visible: false
                     clip: true
                     model: groupModel
+
+                    onVisibleChanged: {
+                        GroupRepository.getAll();
+                    }
 
                     delegate: Rectangle {
                         height: 50
@@ -1196,6 +1224,10 @@ Window {
                     clip: true
                     model: contractTypeModel
 
+                    onVisibleChanged: {
+                        ContractTypeRepository.getAll();
+                    }
+
                     delegate: Rectangle {
                         height: 50
                         width: parent.width
@@ -1233,6 +1265,10 @@ Window {
                     clip: true
                     model: documentsModel
 
+                    onVisibleChanged: {
+                        DocumentRepository.getAll();
+                    }
+
                     delegate: Rectangle {
                         height: 50
                         width: parent.width
@@ -1263,6 +1299,9 @@ Window {
             }
         }
     }
+
+
+
 
     Popup {
         id: userUpdateForm
