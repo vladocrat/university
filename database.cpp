@@ -632,6 +632,136 @@ bool Database::update(const ContractType& oldData, const ContractType& newData)
 
     LOGL("updated contract_type:" + newData.name + " successfully");
 
+                       return true;
+}
+
+QList<Document> Database::getAllDocuments()
+{
+    QList<Document> ret;
+
+    if (!isOpen())
+    {
+        ERR("failed to fetch all Documents, no connection to db");
+        return ret;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("SELECT * FROM documents"))
+    {
+       ERR(m_db.lastError());
+       return ret;
+    }
+
+    if (!executeQuery(query))
+    {
+       ERR(m_db.lastError());
+       return ret;
+    }
+
+    auto pathIx = query.record().indexOf("documents_file_location");
+
+    while (query.next())
+    {
+        Document d;
+        d.path = query.value(pathIx).toString();
+
+        ret.append(d);
+    }
+
+    LOGL("documents fetched successfully");
+
+    return ret;
+}
+
+bool Database::insert(const Document& d)
+{
+    if (!isOpen())
+    {
+        ERR("db connection isnt open");
+        return false;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("insert into documents (documents_file_location) \
+                       values (?)"))
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    query.bindValue(0, d.path);
+
+    if (!executeQuery(query))
+    {
+        ERR("failed to insert documents: " + d.path);
+        return false;
+    }
+
+    LOGL("documents added successfully");
+
+    return true;
+}
+
+bool Database::deleteOne(const Document& d)
+{
+    if (!isOpen())
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("delete from documents where documents_file_location=:path"))
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    query.bindValue(":path", d.path, QSql::In);
+
+    if (!executeQuery(query))
+    {
+        ERR("failed to delete documents: " + d.path);
+        return false;
+    }
+
+    LOGL("documents: " + d.path + "  deleted successfully");
+
+    return true;
+}
+
+bool Database::update(const Document& oldData, const Document& newData)
+{
+    if (!isOpen())
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("update documents set \
+                        documents_file_location = :new \
+                        where documents_file_location = :old"))
+    {
+        ERR("failed to update Document: " + oldData.path);
+        return false;
+    }
+
+    query.bindValue(":new", newData.path, QSql::In);
+    query.bindValue(":old", oldData.path, QSql::In);
+
+    if (!executeQuery(query))
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    LOGL("updated Document:" + newData.path + " successfully");
+
     return true;
 }
 

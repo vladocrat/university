@@ -9,6 +9,7 @@
 #include "dbsettings.h"
 #include "group.h"
 #include "contracttype.h"
+#include "document.h"
 
 namespace DB {
 
@@ -42,11 +43,17 @@ public:
     [[nodiscard]] bool deleteOne(const Group&);
     [[nodiscard]] bool update(const Group&, const Group&);
 
-    ///! group
+    ///! ContractType
     [[nodiscard]] QList<ContractType> getAllContractTypes();
     [[nodiscard]] bool insert(const ContractType&);
     [[nodiscard]] bool deleteOne(const ContractType&);
     [[nodiscard]] bool update(const ContractType&, const ContractType&);
+
+    ///! documents
+    [[nodiscard]] QList<Document> getAllDocuments();
+    [[nodiscard]] bool insert(const Document&);
+    [[nodiscard]] bool deleteOne(const Document&);
+    [[nodiscard]] bool update(const Document&, const Document&);
 
 private:
    [[nodiscard]] bool executeQuery(QSqlQuery& query);

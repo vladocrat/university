@@ -42,6 +42,10 @@ set(PROJECT_SOURCES
         contracttype.h contracttype.cpp
         contracttyperepository.h contracttyperepository.cpp
         contracttypemodel.h contracttypemodel.cpp
+        GapYear.h
+        document.h
+        documentrepository.h documentrepository.cpp
+        documentmodel.h documentmodel.cpp
         qml.qrc
 )
 

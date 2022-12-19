@@ -7,6 +7,7 @@ import UserRepository 1.0
 import AccessRightsRepository 1.0
 import GroupRepository 1.0
 import ContractTypeRepository 1.0
+import DocumentRepository 1.0
 
 Window {
     id: root
@@ -177,6 +178,22 @@ Window {
                 }
             }
 
+            MenuButton {
+                Layout.alignment: Qt.AlignCenter
+                Layout.preferredHeight: 40
+                Layout.fillWidth: true
+                pressColor: "red"
+                btnText: "documents"
+
+                onClicked: {
+                    if (documentsMenu.visible === true) {
+                        documentsMenu.visible = false;
+                    } else {
+                        documentsMenu.visible = true;
+                    }
+                }
+            }
+
             Item {
                 Layout.preferredHeight: parent.height - btn.height
                 Layout.preferredWidth: 1
@@ -209,6 +226,25 @@ Window {
         anchors.left: mainMenu.right
         height: root.height
         width: root.width / 5
+
+        onGetAllClicked: {
+            ContractTypeRepository.getAll();
+            contractTypeResultList.visible = true;
+        }
+
+        onInsertClicked: {
+            insertPopup.open();
+        }
+
+        onDeleteClicked: {
+            ContractTypeRepository.getAll();
+            deletePopup.open();
+        }
+
+        onUpdateClicked: {
+            ContractTypeRepository.getAll();
+            updatePopup.open();
+        }
     }
 
     ActionsMenu {
@@ -320,6 +356,36 @@ Window {
             updatePopup.open();
         }
     }
+
+    ActionsMenu {
+        id: documentsMenu
+
+        anchors.top: topbar.bottom
+        anchors.left: mainMenu.right
+        height: root.height
+        width: root.width / 5
+
+        onGetAllClicked: {
+            DocumentRepository.getAll();
+            documentsResultList.visible = true;
+        }
+
+        onInsertClicked: {
+            insertPopup.open();
+        }
+
+        onDeleteClicked: {
+            DocumentRepository.getAll();
+            deletePopup.open();
+        }
+
+        onUpdateClicked: {
+            DocumentRepository.getAll();
+            updatePopup.open();
+        }
+    }
+
+
 
     ListView {
         id: accessRighsResultList
@@ -445,6 +511,36 @@ Window {
         }
     }
 
+    ListView {
+        id: documentsResultList
+        anchors.left: studentMenu.right
+        anchors.top: topbar.bottom
+        width: root.width - mainMenu.width - studentMenu.width
+        height: root.height
+        visible: false
+        clip: true
+        model: documentsModel
+
+        delegate: Rectangle {
+            height: 50
+            width: parent.width
+            border.width: 1
+
+            ColumnLayout {
+                anchors.fill: parent
+                spacing: 2
+
+                EntityCell {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    text: "Path: " + model.path
+                }
+            }
+        }
+    }
+
+
+
 
     Popup {
         id: insertPopup
@@ -464,7 +560,7 @@ Window {
                 id: insertFormChoice
 
                 Layout.alignment: Qt.AlignCenter
-                model: ["", "student", "contract", "gap year", "user", "role", "group", "contract type"]
+                model: ["", "student", "contract", "gap year", "user", "role", "group", "contract type", "documents"]
             }
 
             ColumnLayout {
@@ -484,7 +580,6 @@ Window {
 
                 visible: insertFormChoice.currentIndex === 3
             }
-
 
             ColumnLayout {
                 id: userInsert
@@ -611,6 +706,31 @@ Window {
                     }
                 }
             }
+
+            ColumnLayout {
+                id: documentInsert
+
+                Layout.alignment: Qt.AlignCenter
+                visible: insertFormChoice.currentIndex === 8
+
+                Text {
+                    Layout.alignment: Qt.AlignCenter
+                    text: "INSERT DOCUMENT"
+                }
+
+                TextField {
+                    id: documentPath
+                    placeholderText: "path";
+                }
+
+                MenuButton {
+                    onClicked: {
+                        if (DocumentRepository.insert(documentPath.text)) {
+
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -638,7 +758,7 @@ Window {
                 id: deleteFormChoice
 
                 Layout.alignment: Qt.AlignCenter
-                model: ["", "student", "contract", "gap year", "user", "role", "group", "contract type"]
+                model: ["", "student", "contract", "gap year", "user", "role", "group", "contract type", "document"]
 
                 onCurrentIndexChanged: {
                     if (deleteFormChoice.currentIndex === 4) {
@@ -655,6 +775,10 @@ Window {
 
                     if (deleteFormChoice.currentIndex === 7) {
                         getAllContractTypes.visible = true;
+                    }
+
+                    if (deleteFormChoice.currentIndex === 8) {
+                        getAllDocuments.visible = true;
                     }
                 }
             }
@@ -841,6 +965,47 @@ Window {
                         }
                     }
                 }
+
+                ListView {
+                    id: getAllDocuments
+
+                    Layout.preferredHeight: parent.height
+                    Layout.preferredWidth: parent.width
+                    visible: false
+                    clip: true
+                    model: documentsModel
+
+                    onVisibleChanged: {
+                        DocumentRepository.getAll();
+                    }
+
+                    delegate: Rectangle {
+                        height: 50
+                        width: parent.width
+                        border.width: 1
+
+                        MouseArea {
+                            anchors.fill: parent
+
+                            onClicked: {
+                                if (DocumentRepository.deleteOne(index)) {
+
+                                }
+                            }
+                        }
+
+                        ColumnLayout {
+                            anchors.fill: parent
+                            spacing: 2
+
+                            EntityCell {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+                                text: "Name: " + model.name
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -869,7 +1034,7 @@ Window {
                 id: updateFormChoice
 
                 Layout.alignment: Qt.AlignCenter
-                model: ["", "student", "contract", "gap year", "user", "role", "group", "contract type"]
+                model: ["", "student", "contract", "gap year", "user", "role", "group", "contract type", "document"]
 
                 onCurrentIndexChanged: {
                     if (updateFormChoice.currentIndex === 4) {
@@ -886,6 +1051,10 @@ Window {
 
                     if (updateFormChoice.currentIndex === 7) {
                         updateGetAllContractTypes.visible = true;
+                    }
+
+                    if (updateFormChoice.currentIndex === 8) {
+                        updateGetAllDocuments.visible = true;
                     }
                 }
             }
@@ -1054,6 +1223,43 @@ Window {
                         }
                     }
                 }
+
+                ListView {
+                    id: updateGetAllDocuments
+
+                    Layout.preferredHeight: parent.height
+                    Layout.preferredWidth: parent.width
+                    visible: false
+                    clip: true
+                    model: documentsModel
+
+                    delegate: Rectangle {
+                        height: 50
+                        width: parent.width
+                        border.width: 1
+
+                        MouseArea {
+                            anchors.fill: parent
+
+                            onClicked: {
+                                updatePopup.close();
+                                documentsUpdateForm.open();
+                                documentsUpdateForm.userIx = index;
+                            }
+                        }
+
+                        ColumnLayout {
+                            anchors.fill: parent
+                            spacing: 2
+
+                            EntityCell {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+                                text: "Name: " + model.name
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -1201,6 +1407,38 @@ Window {
                 onClicked: {
                     if (ContractTypeRepository.update(contractTypeUpdateName.text,
                                               contractTypeUpdateForm.userIx)) {
+                    }
+                }
+            }
+        }
+    }
+
+    Popup {
+        id: documentsUpdateForm
+
+        property int userIx: -1
+
+        x: Math.round((parent.width - width) / 2)
+        y: Math.round((parent.height - height) / 2)
+        width: root.width / 2
+        height: root.height / 1.3
+        focus: true
+        modal: true
+        closePolicy: Popup.CloseOnEscape;
+
+        contentItem: ColumnLayout {
+
+            TextField {
+                id: documentsUpdatePath
+                Layout.alignment: Qt.AlignCenter
+                placeholderText: "name"
+            }
+
+            MenuButton {
+                Layout.alignment: Qt.AlignCenter
+                onClicked: {
+                    if (ContractTypeRepository.update(documentsUpdatePath.text,
+                                              documentsUpdateForm.userIx)) {
                     }
                 }
             }

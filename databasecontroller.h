@@ -3,6 +3,7 @@
 #include "database.h"
 #include "dbsettings.h"
 #include "contracttype.h"
+#include "document.h"
 
 #include <optional>
 
@@ -41,6 +42,12 @@ public:
     [[nodiscard]] bool insert(const ContractType&);
     [[nodiscard]] bool deleteOne(const ContractType&);
     [[nodiscard]] bool update(const ContractType& oldData, const ContractType& newData);
+
+    ///! gapyear
+    [[nodiscard]] QList<Document> getAllDocuments();
+    [[nodiscard]] bool insert(const Document&);
+    [[nodiscard]] bool deleteOne(const Document&);
+    [[nodiscard]] bool update(const Document& oldData, const Document& newData);
 
 private:
     DatabaseController() = default;
