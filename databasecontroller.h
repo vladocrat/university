@@ -5,6 +5,7 @@
 #include "contracttype.h"
 #include "document.h"
 #include "GapYear.h"
+#include "passport.h"
 
 #include <optional>
 
@@ -55,6 +56,12 @@ public:
     [[nodiscard]] bool insert(const GapYear&);
     [[nodiscard]] bool deleteOne(const GapYear&);
     [[nodiscard]] bool update(const GapYear& oldData, const GapYear& newData);
+
+    ///! passportType
+    [[nodiscard]] QList<PassportTypeString> getAllPassportTypes();
+    [[nodiscard]] bool insert(const PassportTypeString&);
+    [[nodiscard]] bool deleteOne(const PassportTypeString&);
+    [[nodiscard]] bool update(const PassportTypeString& oldData, const PassportTypeString& newData);
 
 private:
     DatabaseController() = default;

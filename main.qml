@@ -9,6 +9,7 @@ import GroupRepository 1.0
 import ContractTypeRepository 1.0
 import DocumentRepository 1.0
 import GapYearRepository 1.0
+import PassportTypeRepository 1.0
 
 Window {
     id: root
@@ -191,6 +192,22 @@ Window {
                         documentsMenu.visible = false;
                     } else {
                         documentsMenu.visible = true;
+                    }
+                }
+            }
+
+            MenuButton {
+                Layout.alignment: Qt.AlignCenter
+                Layout.preferredHeight: 40
+                Layout.fillWidth: true
+                pressColor: "red"
+                btnText: "passport type"
+
+                onClicked: {
+                    if (passportTypeMenu.visible === true) {
+                        passportTypeMenu.visible = false;
+                    } else {
+                        passportTypeMenu.visible = true;
                     }
                 }
             }
@@ -382,6 +399,34 @@ Window {
 
         onUpdateClicked: {
             DocumentRepository.getAll();
+            updatePopup.open();
+        }
+    }
+
+    ActionsMenu {
+        id: passportTypeMenu
+
+        anchors.top: topbar.bottom
+        anchors.left: mainMenu.right
+        height: root.height
+        width: root.width / 5
+
+        onGetAllClicked: {
+            PassportTypeRepository.getAll();
+            passportTypeResultList.visible = true;
+        }
+
+        onInsertClicked: {
+            insertPopup.open();
+        }
+
+        onDeleteClicked: {
+            PassportTypeRepository.getAll();
+            deletePopup.open();
+        }
+
+        onUpdateClicked: {
+            PassportTypeRepository.getAll();
             updatePopup.open();
         }
     }
@@ -591,6 +636,33 @@ Window {
         }
     }
 
+    ListView {
+        id: passportTypeResultList
+        anchors.left: studentMenu.right
+        anchors.top: topbar.bottom
+        width: root.width - mainMenu.width - studentMenu.width
+        height: root.height
+        visible: false
+        clip: true
+        model: passportTypeModel
+
+        delegate: Rectangle {
+            height: 50
+            width: parent.width
+            border.width: 1
+
+            ColumnLayout {
+                anchors.fill: parent
+                spacing: 2
+
+                EntityCell {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    text: "Name: " + model.name
+                }
+            }
+        }
+    }
 
 
 
@@ -612,7 +684,7 @@ Window {
                 id: insertFormChoice
 
                 Layout.alignment: Qt.AlignCenter
-                model: ["", "student", "contract", "gap year", "user", "role", "group", "contract type", "documents"]
+                model: ["", "student", "contract", "gap year", "user", "role", "group", "contract type", "documents", "passport type"]
             }
 
             ColumnLayout {
@@ -783,8 +855,34 @@ Window {
                     }
                 }
             }
+
+            ColumnLayout {
+                id: passportTypeInsert
+
+                Layout.alignment: Qt.AlignCenter
+                visible: insertFormChoice.currentIndex === 9
+
+                Text {
+                    Layout.alignment: Qt.AlignCenter
+                    text: "INSERT PASSPORT TYPE"
+                }
+
+                TextField {
+                    id: passportTypeName
+                    placeholderText: "name";
+                }
+
+                MenuButton {
+                    onClicked: {
+                        if (PassportTypeRepository.insert(passportTypeName.text)) {
+
+                        }
+                    }
+                }
+            }
         }
     }
+
 
     Popup {
         id: deletePopup
@@ -810,7 +908,7 @@ Window {
                 id: deleteFormChoice
 
                 Layout.alignment: Qt.AlignCenter
-                model: ["", "student", "contract", "gap year", "user", "role", "group", "contract type", "document"]
+                model: ["", "student", "contract", "gap year", "user", "role", "group", "contract type", "document", "contract type"]
 
                 onCurrentIndexChanged: {
                     getAllUsers.visible = false;
@@ -818,6 +916,7 @@ Window {
                     getAllGroups.visible = false;
                     getAllContractTypes.visible = false;
                     getAllDocuments.visible = false;
+                    getAllPassportType.visible = false;
 
                     if (deleteFormChoice.currentIndex === 4) {
                         getAllUsers.visible = true;
@@ -837,6 +936,10 @@ Window {
 
                     if (deleteFormChoice.currentIndex === 8) {
                         getAllDocuments.visible = true;
+                    }
+
+                    if (deleteFormChoice.currentIndex === 9) {
+                        getAllPassportType.visible = true;
                     }
                 }
             }
@@ -1064,6 +1167,47 @@ Window {
                         }
                     }
                 }
+
+                ListView {
+                    id: getAllPassportType
+
+                    Layout.preferredHeight: parent.height
+                    Layout.preferredWidth: parent.width
+                    visible: false
+                    clip: true
+                    model: passportTypeModel
+
+                    onVisibleChanged: {
+                        PassportTypeRepository.getAll();
+                    }
+
+                    delegate: Rectangle {
+                        height: 50
+                        width: parent.width
+                        border.width: 1
+
+                        MouseArea {
+                            anchors.fill: parent
+
+                            onClicked: {
+                                if (PassportTypeRepository.deleteOne(index)) {
+
+                                }
+                            }
+                        }
+
+                        ColumnLayout {
+                            anchors.fill: parent
+                            spacing: 2
+
+                            EntityCell {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+                                text: "Name: " + model.name
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -1092,7 +1236,7 @@ Window {
                 id: updateFormChoice
 
                 Layout.alignment: Qt.AlignCenter
-                model: ["", "student", "contract", "gap year", "user", "role", "group", "contract type", "document"]
+                model: ["", "student", "contract", "gap year", "user", "role", "group", "contract type", "document", "contract type"]
 
                 onCurrentIndexChanged: {
                     updateGetAllUsers.visible = false;
@@ -1100,6 +1244,7 @@ Window {
                     updateGetAllGroups.visible = false;
                     updateGetAllContractTypes.visible = false;
                     updateGetAllDocuments.visible = false;
+                    updateGetAllPassportTypes.visible = false;
 
                     if (updateFormChoice.currentIndex === 4) {
                         updateGetAllUsers.visible = true;
@@ -1119,6 +1264,10 @@ Window {
 
                     if (updateFormChoice.currentIndex === 8) {
                         updateGetAllDocuments.visible = true;
+                    }
+
+                    if (updateFormChoice.currentIndex === 9) {
+                        updateGetAllPassportTypes.visible = true;
                     }
                 }
             }
@@ -1344,11 +1493,50 @@ Window {
                         }
                     }
                 }
+
+                ListView {
+                    id: updateGetAllPassportTypes
+
+                    Layout.preferredHeight: parent.height
+                    Layout.preferredWidth: parent.width
+                    visible: false
+                    clip: true
+                    model: passportTypeModel
+
+                    onVisibleChanged: {
+                        PassportTypeRepository.getAll();
+                    }
+
+                    delegate: Rectangle {
+                        height: 50
+                        width: parent.width
+                        border.width: 1
+
+                        MouseArea {
+                            anchors.fill: parent
+
+                            onClicked: {
+                                updatePopup.close();
+                                passportTypeUpdateForm.open();
+                                passportTypeUpdateForm.userIx = index;
+                            }
+                        }
+
+                        ColumnLayout {
+                            anchors.fill: parent
+                            spacing: 2
+
+                            EntityCell {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+                                text: "Name: " + model.name
+                            }
+                        }
+                    }
+                }
             }
         }
     }
-
-
 
 
     Popup {
@@ -1524,13 +1712,48 @@ Window {
             MenuButton {
                 Layout.alignment: Qt.AlignCenter
                 onClicked: {
-                    if (ContractTypeRepository.update(documentsUpdatePath.text,
+                    if (DocumentRepository.update(documentsUpdatePath.text,
                                               documentsUpdateForm.userIx)) {
                     }
                 }
             }
         }
     }
+
+    Popup {
+        id: passportTypeUpdateForm
+
+        property int userIx: -1
+
+        x: Math.round((parent.width - width) / 2)
+        y: Math.round((parent.height - height) / 2)
+        width: root.width / 2
+        height: root.height / 1.3
+        focus: true
+        modal: true
+        closePolicy: Popup.CloseOnEscape;
+
+        contentItem: ColumnLayout {
+
+            TextField {
+                id: passportTypeUpdatePath
+                Layout.alignment: Qt.AlignCenter
+                placeholderText: "name"
+            }
+
+            MenuButton {
+                Layout.alignment: Qt.AlignCenter
+                onClicked: {
+                    if (PassportTypeRepository.update(passportTypeUpdatePath.text,
+                                              passportTypeUpdateForm.userIx)) {
+                    }
+                }
+            }
+        }
+    }
+
+
+
 }
 
 

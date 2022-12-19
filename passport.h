@@ -1,5 +1,12 @@
 #pragma once
 
+#include <QString>
+
+struct PassportTypeString
+{
+    QString name;
+};
+
 class Passport
 {
 public:
@@ -7,6 +14,7 @@ public:
         General,
         Abroad
     };
+
 
     struct Series
     {

@@ -834,7 +834,137 @@ return false;
 
 bool Database::update(const GapYear &, const GapYear &)
 {
-return false;
+ return false;
+}
+
+QList<PassportTypeString> Database::getAllPassportTypes()
+{
+    QList<PassportTypeString> ret;
+
+    if (!isOpen())
+    {
+        ERR("failed to fetch all pts, no connection to db");
+        return ret;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("SELECT * FROM passport_type"))
+    {
+       ERR(m_db.lastError());
+       return ret;
+    }
+
+    if (!executeQuery(query))
+    {
+       ERR(m_db.lastError());
+       return ret;
+    }
+
+    auto typeIx = query.record().indexOf("passport_type");
+
+    while (query.next())
+    {
+        PassportTypeString pts;
+        pts.name = query.value(typeIx).toString();
+
+        ret.append(pts);
+    }
+
+    LOGL("passport_type fetched successfully");
+
+    return ret;
+}
+
+bool Database::insert(const PassportTypeString& pst)
+{
+    if (!isOpen())
+    {
+        ERR("db connection isnt open");
+        return false;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("insert into passport_type (passport_type) \
+                       values (?)"))
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    query.bindValue(0, pst.name);
+
+    if (!executeQuery(query))
+    {
+        ERR("failed to insert passport_type: " + pst.name);
+        return false;
+    }
+
+    LOGL("passport_type added successfully");
+
+    return true;
+}
+
+bool Database::deleteOne(const PassportTypeString& pst)
+{
+    if (!isOpen())
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("delete from passport_type where passport_type=:name"))
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    query.bindValue(":name", pst.name, QSql::In);
+
+    if (!executeQuery(query))
+    {
+        ERR("failed to delete passport_type: " + pst.name);
+        return false;
+    }
+
+    LOGL("passport_type: " + pst.name + "  deleted successfully");
+
+    return true;
+}
+
+bool Database::update(const PassportTypeString& oldData, const PassportTypeString& newData)
+{
+    if (!isOpen())
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("update passport_type set \
+                        passport_type = :new \
+                        where passport_type = :old"))
+    {
+        ERR("failed to update Document: " + oldData.name);
+        return false;
+    }
+
+    query.bindValue(":new", newData.name, QSql::In);
+    query.bindValue(":old", oldData.name, QSql::In);
+
+    if (!executeQuery(query))
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    LOGL("updated passport_type:" + newData.name + " successfully");
+
+    return true;
 }
 
 bool Database::executeQuery(QSqlQuery& query)

@@ -18,6 +18,7 @@
 #include "contracttyperepository.h"
 #include "documentrepository.h"
 #include "gapyearrepository.h"
+#include "passporttyperepository.h"
 
 ///! models
 #include "usersmodel.h"
@@ -26,6 +27,7 @@
 #include "contracttypemodel.h"
 #include "documentmodel.h"
 #include "gapyearmodel.h"
+#include "passporttypemodel.h"
 
 #include <iostream>
 
@@ -44,6 +46,7 @@ static void registerTypes()
     contractTypeRepository->registerType();
     documentRepository->registerType();
     gapYearRepository->registerType();
+    passportTypeRepository->registerType();
 }
 
 static void initDB()
@@ -89,6 +92,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("contractTypeModel", contractTypeRepository->model());
     engine.rootContext()->setContextProperty("documentsModel", documentRepository->model());
     engine.rootContext()->setContextProperty("gapYearModel", gapYearRepository->model());
+    engine.rootContext()->setContextProperty("passportTypeModel", passportTypeRepository->model());
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
 

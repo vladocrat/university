@@ -143,3 +143,23 @@ bool DatabaseController::update(const GapYear &oldData, const GapYear &newData)
 {
     return m_db.update(oldData, newData);
 }
+
+QList<PassportTypeString> DatabaseController::getAllPassportTypes()
+{
+    return m_db.getAllPassportTypes();
+}
+
+bool DatabaseController::insert(const PassportTypeString& pts)
+{
+    return m_db.insert(pts);
+}
+
+bool DatabaseController::deleteOne(const PassportTypeString& pts)
+{
+    return m_db.deleteOne(pts);
+}
+
+bool DatabaseController::update(const PassportTypeString &oldData, const PassportTypeString &newData)
+{
+    return m_db.update(oldData, newData);
+}

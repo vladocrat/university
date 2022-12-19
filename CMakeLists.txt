@@ -48,6 +48,8 @@ set(PROJECT_SOURCES
         documentmodel.h documentmodel.cpp
         gapyearmodel.h gapyearmodel.cpp
         gapyearrepository.h gapyearrepository.cpp
+        passporttypemodel.h passporttypemodel.cpp
+        passporttyperepository.h passporttyperepository.cpp
         qml.qrc
 )
 

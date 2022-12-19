@@ -11,6 +11,7 @@
 #include "contracttype.h"
 #include "document.h"
 #include "GapYear.h"
+#include "passport.h"
 
 namespace DB {
 
@@ -56,11 +57,17 @@ public:
     [[nodiscard]] bool deleteOne(const Document&);
     [[nodiscard]] bool update(const Document&, const Document&);
 
-    ///! gapyear
+    ///! gapyear TODO FULL CRUD REQUIRES STUDENT
     [[nodiscard]] QList<GapYear> getAllGapYears();
     [[nodiscard]] bool insert(const GapYear&);
     [[nodiscard]] bool deleteOne(const GapYear&);
     [[nodiscard]] bool update(const GapYear&, const GapYear&);
+
+    ///! passporttype
+    [[nodiscard]] QList<PassportTypeString> getAllPassportTypes();
+    [[nodiscard]] bool insert(const PassportTypeString&);
+    [[nodiscard]] bool deleteOne(const PassportTypeString&);
+    [[nodiscard]] bool update(const PassportTypeString&, const PassportTypeString&);
 
 private:
    [[nodiscard]] bool executeQuery(QSqlQuery& query);
@@ -68,6 +75,7 @@ private:
    QSqlDatabase m_db;
    Settings m_settings;
 };
+
 
 } // DB
 
