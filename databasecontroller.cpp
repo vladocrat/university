@@ -163,3 +163,23 @@ bool DatabaseController::update(const PassportTypeString &oldData, const Passpor
 {
     return m_db.update(oldData, newData);
 }
+
+QList<Dormitory> DatabaseController::getAllDormitories()
+{
+    return m_db.getAllDormitories();
+}
+
+bool DatabaseController::insert(const Dormitory& d)
+{
+    return m_db.insert(d);
+}
+
+bool DatabaseController::deleteOne(const Dormitory& d)
+{
+    return m_db.deleteOne(d);
+}
+
+bool DatabaseController::update(const Dormitory &oldData, const Dormitory &newData)
+{
+    return m_db.update(oldData, newData);
+}

@@ -967,6 +967,74 @@ bool Database::update(const PassportTypeString& oldData, const PassportTypeStrin
     return true;
 }
 
+QList<Dormitory> Database::getAllDormitories()
+{
+    QList<Dormitory> ret;
+
+    if (!isOpen())
+    {
+        ERR("failed to fetch all Dormitories, no connection to db");
+        return ret;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("select dormitory_address, dormitory_room_number, dormitory_status, \
+                       student_full_name, student_group_name from dormitory \
+                       join student s on dormitory.student_id = s.student_id \
+                       join groups g on s.student_group_id = g.student_group_id"))
+    {
+       ERR(m_db.lastError());
+       return ret;
+    }
+
+    if (!executeQuery(query))
+    {
+       ERR(m_db.lastError());
+       return ret;
+    }
+
+    auto addressIx = query.record().indexOf("dormitory_address");
+    auto roomNumberIx = query.record().indexOf("dormitory_room_number");
+    auto statusIx = query.record().indexOf("dormitory_status");
+    auto studentNameIx = query.record().indexOf("student_full_name");
+    auto studentGroupNameIx = query.record().indexOf("student_group_name");
+
+    while (query.next())
+    {
+        Dormitory d;
+        d.address = query.value(addressIx).toString();
+        d.roomNumber = query.value(roomNumberIx).toInt();
+        d.status = stringToStatus(query.value(statusIx).toString());
+        Student* s = new Student;
+        s->fullName = query.value(studentNameIx).toString();
+        Group g;
+        g.name = query.value(studentGroupNameIx).toString();
+        s->group = g;
+        d.student = s;
+        ret.append(d);
+    }
+
+    LOGL("Dormitory fetched successfully");
+
+    return ret;
+}
+
+bool Database::insert(const Dormitory &)
+{
+return {};
+}
+
+bool Database::deleteOne(const Dormitory &)
+{
+return {};
+}
+
+bool Database::update(const Dormitory &, const Dormitory &)
+{
+return {};
+}
+
 bool Database::executeQuery(QSqlQuery& query)
 {
     if (!query.exec())

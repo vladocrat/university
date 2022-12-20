@@ -50,6 +50,10 @@ set(PROJECT_SOURCES
         gapyearrepository.h gapyearrepository.cpp
         passporttypemodel.h passporttypemodel.cpp
         passporttyperepository.h passporttyperepository.cpp
+        studentmodel.h studentmodel.cpp
+        Dormitory.h
+        dormitorymodel.h dormitorymodel.cpp
+        dormitoryrepository.h dormitoryrepository.cpp
         qml.qrc
 )
 

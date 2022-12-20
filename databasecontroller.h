@@ -6,6 +6,7 @@
 #include "document.h"
 #include "GapYear.h"
 #include "passport.h"
+#include "Dormitory.h"
 
 #include <optional>
 
@@ -62,6 +63,12 @@ public:
     [[nodiscard]] bool insert(const PassportTypeString&);
     [[nodiscard]] bool deleteOne(const PassportTypeString&);
     [[nodiscard]] bool update(const PassportTypeString& oldData, const PassportTypeString& newData);
+
+    ///! Dormitory
+    [[nodiscard]] QList<Dormitory> getAllDormitories();
+    [[nodiscard]] bool insert(const Dormitory&);
+    [[nodiscard]] bool deleteOne(const Dormitory&);
+    [[nodiscard]] bool update(const Dormitory& oldData, const Dormitory& newData);
 
 private:
     DatabaseController() = default;

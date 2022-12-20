@@ -10,6 +10,7 @@ import ContractTypeRepository 1.0
 import DocumentRepository 1.0
 import GapYearRepository 1.0
 import PassportTypeRepository 1.0
+import DormitoryRepository 1.0
 
 Window {
     id: root
@@ -208,6 +209,22 @@ Window {
                         passportTypeMenu.visible = false;
                     } else {
                         passportTypeMenu.visible = true;
+                    }
+                }
+            }
+
+            MenuButton {
+                Layout.alignment: Qt.AlignCenter
+                Layout.preferredHeight: 40
+                Layout.fillWidth: true
+                pressColor: "red"
+                btnText: "dormitory"
+
+                onClicked: {
+                    if (dormitoryMenu.visible === true) {
+                        dormitoryMenu.visible = false;
+                    } else {
+                        dormitoryMenu.visible = true;
                     }
                 }
             }
@@ -431,6 +448,33 @@ Window {
         }
     }
 
+    ActionsMenu {
+        id: dormitoryMenu
+
+        anchors.top: topbar.bottom
+        anchors.left: mainMenu.right
+        height: root.height
+        width: root.width / 5
+
+        onGetAllClicked: {
+            DormitoryRepository.getAll();
+            dormitoryResultList.visible = true;
+        }
+
+        onInsertClicked: {
+            insertPopup.open();
+        }
+
+        onDeleteClicked: {
+            DormitoryRepository.getAll();
+            deletePopup.open();
+        }
+
+        onUpdateClicked: {
+            DormitoryRepository.getAll();
+            updatePopup.open();
+        }
+    }
 
 
     ListView {
@@ -664,7 +708,43 @@ Window {
         }
     }
 
+    ListView {
+        id: dormitoryResultList
+        anchors.left: studentMenu.right
+        anchors.top: topbar.bottom
+        width: root.width - mainMenu.width - studentMenu.width
+        height: root.height
+        visible: false
+        clip: true
+        model: dormitoryModel
 
+        delegate: Rectangle {
+            height: 50
+            width: parent.width
+            border.width: 1
+
+            ColumnLayout {
+                anchors.fill: parent
+                spacing: 2
+
+                EntityCell {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    text: "Address: " + model.address + ":" + model.roomNumber
+                }
+                EntityCell {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    text: "Status: " + model.status
+                }
+                EntityCell {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    text: "Student: " + model.studentName + " " + model.studentGroup
+                }
+            }
+        }
+    }
 
     Popup {
         id: insertPopup
@@ -1751,9 +1831,6 @@ Window {
             }
         }
     }
-
-
-
 }
 
 
