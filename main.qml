@@ -11,6 +11,7 @@ import DocumentRepository 1.0
 import GapYearRepository 1.0
 import PassportTypeRepository 1.0
 import DormitoryRepository 1.0
+import StudentRepository 1.0
 
 Window {
     id: root
@@ -243,6 +244,25 @@ Window {
         anchors.left: mainMenu.right
         height: root.height
         width: root.width / 5
+
+        onGetAllClicked: {
+            StudentRepository.getAll();
+            studentResultList.visible = true;
+        }
+
+        onInsertClicked: {
+            insertPopup.open();
+        }
+
+        onDeleteClicked: {
+            StudentRepository.getAll();
+            deletePopup.open();
+        }
+
+        onUpdateClicked: {
+            StudentRepository.getAll();
+            updatePopup.open();
+        }
     }
 
     ActionsMenu {
@@ -746,6 +766,40 @@ Window {
         }
     }
 
+    ListView {
+        id: studentResultList
+        anchors.left: studentMenu.right
+        anchors.top: topbar.bottom
+        width: root.width - mainMenu.width - studentMenu.width
+        height: root.height
+        visible: false
+        clip: true
+        model: studentModel
+
+        delegate: Rectangle {
+            height: 50
+            width: parent.width
+            border.width: 1
+
+            ColumnLayout {
+                anchors.fill: parent
+                spacing: 2
+
+                EntityCell {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    text: "Name: " + model.name
+                }
+
+                EntityCell {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    text: "Group: " + model.group
+                }
+            }
+        }
+    }
+
     Popup {
         id: insertPopup
 
@@ -980,7 +1034,6 @@ Window {
                     id: dormitoryAddress
                     placeholderText: "address";
                 }
-
 
                 TextField {
                     id: dormitoryRoomNumber

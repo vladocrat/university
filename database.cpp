@@ -1115,7 +1115,8 @@ QList<Student> Database::getAllStudents()
 
     QSqlQuery query;
 
-    if (!query.prepare("select * from student"))
+    if (!query.prepare("select student_full_name, student_group_name from student \
+                        join groups on student.student_group_id = groups.student_group_id"))
     {
         ERR(m_db.lastError());
         return ret;
@@ -1127,11 +1128,17 @@ QList<Student> Database::getAllStudents()
         return ret;
     }
 
-    auto studentIx = query.record().indexOf("student_id");
+    auto nameIx = query.record().indexOf("student_full_name");
+    auto groupIx = query.record().indexOf("student_group_name");
 
     while (query.next())
     {
-       //ix = query.value(studentIx).toInt();
+       Group g;
+       Student s;
+       s.fullName = query.value(nameIx).toString();
+       g.name = query.value(groupIx).toString();
+       s.group = g;
+       ret.append(s);
     }
 
     LOGL("students fetched successfully");

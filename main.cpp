@@ -30,6 +30,7 @@
 #include "gapyearmodel.h"
 #include "passporttypemodel.h"
 #include "dormitorymodel.h"
+#include "studentrepository.h"
 
 #include <iostream>
 
@@ -50,6 +51,7 @@ static void registerTypes()
     gapYearRepository->registerType();
     passportTypeRepository->registerType();
     dormitoryRepository->registerType();
+    studentRepository->registerType();
 }
 
 static void initDB()
@@ -97,6 +99,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("gapYearModel", gapYearRepository->model());
     engine.rootContext()->setContextProperty("passportTypeModel", passportTypeRepository->model());
     engine.rootContext()->setContextProperty("dormitoryModel", dormitoryRepository->model());
+    engine.rootContext()->setContextProperty("studentModel", studentRepository->model());
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
 
