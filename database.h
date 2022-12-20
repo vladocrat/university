@@ -42,6 +42,7 @@ public:
     [[nodiscard]] bool update(const RoleString&, const RoleString&);
 
     ///! group
+    int groupId(const QString& s);
     [[nodiscard]] QList<Group> getAllGroups();
     [[nodiscard]] bool insert(const Group&);
     [[nodiscard]] bool deleteOne(const Group&);
@@ -80,6 +81,9 @@ public:
     ///! student
     int studentId(const Student& s);
     [[nodiscard]] QList<Student> getAllStudents();
+    [[nodiscard]] bool insert(const Student&, int groupId);
+    [[nodiscard]] bool deleteOne(const Student&);
+    [[nodiscard]] bool update(const Student&, const Student&, int groupId, int capYearRecordId);
 
 private:
    [[nodiscard]] bool executeQuery(QSqlQuery& query);

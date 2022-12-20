@@ -375,6 +375,44 @@ bool Database::update(const RoleString& oldData, const RoleString& newData)
     return true;
 }
 
+int Database::groupId(const QString &s)
+{
+    int ix = -1;
+
+    if (!isOpen())
+    {
+        ERR("db connection isn't open");
+        return ix;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("select student_group_id from groups where student_group_name = :name"))
+    {
+        ERR(m_db.lastError());
+        return ix;
+    }
+
+    query.bindValue(":name", s, QSql::In);
+
+    if (!executeQuery(query))
+    {
+        ERR("failed to select student id");
+        return ix;
+    }
+
+    auto gorupIx = query.record().indexOf("student_group_id");
+
+    while (query.next())
+    {
+       ix = query.value(gorupIx).toInt();
+    }
+
+    LOGL("group index: " + QString::number(ix) + " fetched successfully");
+
+    return ix;
+}
+
 QList<Group> Database::getAllGroups()
 {
     QList<Group> ret;
@@ -1144,6 +1182,100 @@ QList<Student> Database::getAllStudents()
     LOGL("students fetched successfully");
 
     return ret;
+}
+
+bool Database::insert(const Student& s, int groupId)
+{
+    if (!isOpen())
+    {
+        ERR("db connection isnt open");
+        return false;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("insert into student (student_full_name, student_group_id) \
+                       values (?, ?)"))
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    query.bindValue(0, s.fullName);
+    query.bindValue(1, groupId);
+
+    if (!executeQuery(query))
+    {
+        ERR("failed to insert student: " + s.toString());
+        return false;
+    }
+
+    LOGL("student added successfully");
+
+    return true;
+}
+
+bool Database::deleteOne(const Student& s)
+{
+    if (!isOpen())
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("delete from student where student_full_name=:name"))
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    query.bindValue(":name", s.fullName, QSql::In);
+
+    if (!executeQuery(query))
+    {
+        ERR("failed to delete student: " + s.fullName);
+        return false;
+    }
+
+    LOGL("student: " + s.toString() + "  deleted successfully");
+
+                       return true;
+}
+
+bool Database::update(const Student& oldData, const Student& newData, int groupId, int capYearRecordId)
+{
+    if (!isOpen())
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("update student set \
+                        student_full_name = :new, student_group_id = :groupId, cap_year_record_id = :capYeaId\
+                        where student_full_name = :old"))
+    {
+        ERR("failed to update Student: " + oldData.fullName);
+        return false;
+    }
+
+    query.bindValue(":groupId", groupId, QSql::In);
+    query.bindValue(":capYeaId", capYearRecordId, QSql::In);
+    query.bindValue(":new", newData.fullName, QSql::In);
+    query.bindValue(":old", oldData.fullName, QSql::In);
+
+    if (!executeQuery(query))
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    LOGL("updated student:" + newData.toString() + " successfully");
+
+    return true;
 }
 
 bool Database::executeQuery(QSqlQuery& query)

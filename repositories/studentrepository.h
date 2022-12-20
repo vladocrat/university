@@ -15,7 +15,7 @@ public:
     }
 
     Q_INVOKABLE void getAll();
-    Q_INVOKABLE bool insert(const QString& name, int groupIx);
+    Q_INVOKABLE bool insert(const QString& name, QString groupName);
     Q_INVOKABLE bool deleteOne(int);
     Q_INVOKABLE bool update(const QString& name, int ix);
 

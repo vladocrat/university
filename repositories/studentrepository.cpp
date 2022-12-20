@@ -10,19 +10,23 @@ void StudentRepository::getAll()
 
     for (const auto& x : all)
     {
-        LOGL(x.toString());
         m_model.add(x);
     }
 }
 
-bool StudentRepository::insert(const QString &name, int groupIx)
+bool StudentRepository::insert(const QString &name, QString groupName)
 {
-return {};
+    auto groupId = dbController->groupId(groupName);
+    Student s;
+    s.fullName = name;
+    s.group.name = groupName;
+
+    return dbController->insert(s, groupId);
 }
 
-bool StudentRepository::deleteOne(int)
+bool StudentRepository::deleteOne(int ix)
 {
-return {};
+    return dbController->deleteOne(m_model.list().at(ix));
 }
 
 bool StudentRepository::update(const QString &name, int ix)

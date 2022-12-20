@@ -64,6 +64,11 @@ bool DatabaseController::update(const RoleString& oldData, const RoleString& new
     return m_db.update(oldData, newData);
 }
 
+int DatabaseController::groupId(const QString &s)
+{
+    return m_db.groupId(s);
+}
+
 QList<Group> DatabaseController::getAllGroups()
 {
     return m_db.getAllGroups();
@@ -187,4 +192,14 @@ bool DatabaseController::update(const Dormitory &oldData, const Dormitory &newDa
 QList<Student> DatabaseController::getAllStudents()
 {
     return m_db.getAllStudents();
+}
+
+bool DatabaseController::insert(const Student &s, int groupIx)
+{
+    return m_db.insert(s, groupIx);
+}
+
+bool DatabaseController::deleteOne(const Student& s)
+{
+    return m_db.deleteOne(s);
 }

@@ -824,7 +824,34 @@ Window {
             ColumnLayout {
                 id: studentInsert
 
+                Layout.alignment: Qt.AlignCenter
                 visible: insertFormChoice.currentIndex === 1
+
+                onVisibleChanged: GroupRepository.getAll();
+
+                Text {
+                    Layout.alignment: Qt.AlignCenter
+                    text: "INSERT STUDENT"
+                }
+
+                TextField {
+                    id: studentName
+                    placeholderText: "student full name";
+                }
+
+                ComboBox {
+                    id: studentGroup
+                    model: groupModel
+                }
+
+                MenuButton {
+                    onClicked: {
+                        if (StudentRepository.insert(studentName.text,
+                                                     studentGroup.currentValue)) {
+
+                        }
+                    }
+                }
             }
 
             ColumnLayout {
@@ -1089,12 +1116,17 @@ Window {
                 model: ["", "student", "contract", "gap year", "user", "role", "group", "contract type", "document", "contract type"]
 
                 onCurrentIndexChanged: {
+                    getAllStudents.visible = false;
                     getAllUsers.visible = false;
                     getAllAccessRights.visible = false;
                     getAllGroups.visible = false;
                     getAllContractTypes.visible = false;
                     getAllDocuments.visible = false;
                     getAllPassportType.visible = false;
+
+                    if (deleteFormChoice.currentIndex === 1) {
+                        getAllStudents.visible = true;
+                    }
 
                     if (deleteFormChoice.currentIndex === 4) {
                         getAllUsers.visible = true;
@@ -1126,6 +1158,54 @@ Window {
                 Layout.preferredHeight: parent.height - deleteFormChoice.height - 30
                 Layout.preferredWidth: parent.width  - 30
                 Layout.alignment: Qt.AlignCenter
+
+                ListView {
+                    id: getAllStudents
+
+                    Layout.preferredHeight: parent.height
+                    Layout.preferredWidth: parent.width
+                    visible: false
+                    clip: true
+                    model: studentModel
+
+                    onVisibleChanged: {
+                        StudentRepository.getAll();
+                    }
+
+                    delegate: Rectangle {
+                        height: 50
+                        width: parent.width
+                        border.width: 1
+
+                        MouseArea {
+                            anchors.fill: parent
+
+                            onClicked: {
+                                console.log(index);
+                                if (StudentRepository.deleteOne(index)) {
+
+                                }
+                            }
+                        }
+
+                        ColumnLayout {
+                            anchors.fill: parent
+                            spacing: 2
+
+                            EntityCell {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+                                text: "Name: " + model.name
+                            }
+
+                            EntityCell {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+                                text: "Group: " + model.group
+                            }
+                        }
+                    }
+                }
 
 
                 ListView {
