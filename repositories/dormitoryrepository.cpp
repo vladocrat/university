@@ -13,9 +13,13 @@ void DormitoryRepository::getAll()
     }
 }
 
-bool DormitoryRepository::insert(const QString &name)
+bool DormitoryRepository::insert(const QString &address, const QString &roomNumber, const QString &status, int studentIx)
 {
-return false;
+    Dormitory d;
+    d.address = address;
+    d.roomNumber = roomNumber.toInt();
+    d.status = stringToStatus(status);
+    return false;
 }
 
 bool DormitoryRepository::deleteOne(int)

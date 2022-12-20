@@ -16,7 +16,7 @@ public:
     }
 
     Q_INVOKABLE void getAll();
-    Q_INVOKABLE bool insert(const QString& name);
+    Q_INVOKABLE bool insert(const QString& address, const QString& roomNumber, const QString& status, int studentIx);
     Q_INVOKABLE bool deleteOne(int);
     Q_INVOKABLE bool update(const QString& name, int ix);
 

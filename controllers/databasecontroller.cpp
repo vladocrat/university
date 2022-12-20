@@ -183,3 +183,8 @@ bool DatabaseController::update(const Dormitory &oldData, const Dormitory &newDa
 {
     return m_db.update(oldData, newData);
 }
+
+QList<Student> DatabaseController::getAllStudents()
+{
+    return m_db.getAllStudents();
+}

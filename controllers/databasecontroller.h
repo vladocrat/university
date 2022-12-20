@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "database.h"
 #include "dbsettings.h"
@@ -69,6 +69,9 @@ public:
     [[nodiscard]] bool insert(const Dormitory&);
     [[nodiscard]] bool deleteOne(const Dormitory&);
     [[nodiscard]] bool update(const Dormitory& oldData, const Dormitory& newData);
+
+    ///! student
+    [[nodiscard]] QList<Student> getAllStudents();
 
 private:
     DatabaseController() = default;

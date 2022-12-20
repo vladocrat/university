@@ -764,7 +764,7 @@ Window {
                 id: insertFormChoice
 
                 Layout.alignment: Qt.AlignCenter
-                model: ["", "student", "contract", "gap year", "user", "role", "group", "contract type", "documents", "passport type"]
+                model: ["", "student", "contract", "gap year", "user", "role", "group", "contract type", "documents", "passport type", "dormitory"]
             }
 
             ColumnLayout {
@@ -955,6 +955,51 @@ Window {
                 MenuButton {
                     onClicked: {
                         if (PassportTypeRepository.insert(passportTypeName.text)) {
+
+                        }
+                    }
+                }
+            }
+
+            ColumnLayout {
+                id: dormitoryInsert
+
+                Layout.alignment: Qt.AlignCenter
+                visible: insertFormChoice.currentIndex === 10
+
+                onVisibleChanged: {
+                    StudentRepository.getAll();
+                }
+
+                Text {
+                    Layout.alignment: Qt.AlignCenter
+                    text: "INSERT DORMITORY"
+                }
+
+                TextField {
+                    id: dormitoryAddress
+                    placeholderText: "address";
+                }
+
+
+                TextField {
+                    id: dormitoryRoomNumber
+                    placeholderText: "room number";
+                }
+
+                ComboBox {
+                    id: dormitoryStatus
+                    model: ["away", "present"]
+                }
+
+                ComboBox {
+                    id: dormitoryStudent
+                    model: studentModel
+                }
+
+                MenuButton {
+                    onClicked: {
+                        if (DormitoryRepository.insert(dormitoryName.text)) {
 
                         }
                     }

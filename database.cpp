@@ -1020,9 +1020,39 @@ QList<Dormitory> Database::getAllDormitories()
     return ret;
 }
 
-bool Database::insert(const Dormitory &)
+bool Database::insert(const Dormitory& d)
 {
-return {};
+    if (!isOpen())
+    {
+        ERR("db connection isnt open");
+        return false;
+    }
+
+    auto studId = studentId(*d.student);
+
+    QSqlQuery query;
+
+    if (!query.prepare("insert into dormitory (dormitory_address, dormitory_room_number, dormitory_status, student_id) \
+                       values (?,?,?,?)"))
+    {
+        ERR(m_db.lastError());
+        return false;
+    }
+
+    query.bindValue(0, d.address);
+    query.bindValue(1, d.roomNumber);
+    query.bindValue(2, d.statusString());
+    query.bindValue(3, studId);
+
+    if (!executeQuery(query))
+    {
+        ERR("failed to insert dormitory: ");
+        return false;
+    }
+
+    LOGL("dormitory added successfully");
+
+    return true;
 }
 
 bool Database::deleteOne(const Dormitory &)
@@ -1032,7 +1062,81 @@ return {};
 
 bool Database::update(const Dormitory &, const Dormitory &)
 {
-return {};
+  return {};
+}
+
+int Database::studentId(const Student& s)
+{
+    int ix = -1;
+
+    if (!isOpen())
+    {
+        ERR("db connection isn't open");
+        return ix;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("select student_id from student where student_full_name = :fullName"))
+    {
+        ERR(m_db.lastError());
+        return ix;
+    }
+
+    query.bindValue(":fullName", s.fullName, QSql::In);
+
+    if (!executeQuery(query))
+    {
+        ERR("failed to select student id");
+        return ix;
+    }
+
+    auto studentIx = query.record().indexOf("student_id");
+
+    while (query.next())
+    {
+       ix = query.value(studentIx).toInt();
+    }
+
+    LOGL("user index: " + QString::number(ix) + " fetched successfully");
+
+    return ix;
+}
+
+QList<Student> Database::getAllStudents()
+{
+    QList<Student> ret;
+
+    if (!isOpen())
+    {
+        ERR("db connection isn't open");
+        return ret;
+    }
+
+    QSqlQuery query;
+
+    if (!query.prepare("select * from student"))
+    {
+        ERR(m_db.lastError());
+        return ret;
+    }
+
+    if (!executeQuery(query))
+    {
+        ERR("failed to select students");
+        return ret;
+    }
+
+    auto studentIx = query.record().indexOf("student_id");
+
+    while (query.next())
+    {
+       //ix = query.value(studentIx).toInt();
+    }
+
+    LOGL("students fetched successfully");
+
+    return ret;
 }
 
 bool Database::executeQuery(QSqlQuery& query)

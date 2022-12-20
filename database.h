@@ -13,6 +13,7 @@
 #include "GapYear.h"
 #include "passport.h"
 #include "Dormitory.h"
+#include "student.h"
 
 namespace DB {
 
@@ -75,6 +76,10 @@ public:
     [[nodiscard]] bool insert(const Dormitory&);
     [[nodiscard]] bool deleteOne(const Dormitory&);
     [[nodiscard]] bool update(const Dormitory&, const Dormitory&);
+
+    ///! student
+    int studentId(const Student& s);
+    [[nodiscard]] QList<Student> getAllStudents();
 
 private:
    [[nodiscard]] bool executeQuery(QSqlQuery& query);
